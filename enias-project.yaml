@@ -1,0 +1,41 @@
+---
+project:
+  name: Enias
+  platforms:
+    general:
+      configuration:
+        debug:
+          defines:
+            TYRAN_CONFIGURATION_DEBUG: 1
+      include:
+        - src/external/include
+        - src/include
+      src:
+        - src/lib/
+        - src/external/lib/
+    ios:
+      defines:
+        TORNADO_OS_IOS: 1
+      configuration:
+        debug:
+      frameworks:
+        - StoreKit
+      resource-dirs:
+        - ios/images.xcassets/
+      src:
+        - src/external/platform/ios/
+        # - src/external/resources/ios
+        # - src/settings/ios/
+    tvos:
+      defines:
+        TORNADO_OS_IOS: 1
+        TORNADO_OS_TVOS: 1
+      frameworks:
+        - StoreKit
+        - GameController
+      resource-dirs:
+        - tvos/images.xcassets/
+      src:
+        - src/external/platform/ios
+        #- src/external/resources/tvos
+        #- src/settings/tvos/
