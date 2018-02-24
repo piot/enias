@@ -113,13 +113,15 @@ static void tile_to_screen(uint32_t* surface_pixels, const enias_ppu* ppu, size_
 			} else {
 				chars_pixel >>= 4;
 			}
-			const enias_palette_info* palette_entry = &ppu->palette[chars_pixel];
-			uint32_t color = palette_entry->r << 16 | palette_entry->g << 8 | palette_entry->b;
+			if (chars_pixel) {
+				const enias_palette_info* palette_entry = &ppu->palette[chars_pixel];
+				uint32_t color = palette_entry->r << 16 | palette_entry->g << 8 | palette_entry->b;
 
-			uint8_t tpx = screen_x + tx;
-			uint8_t tpy = screen_y + ty;
-			uint32_t target_surface_offset = (tpy * VIRTUAL_SCREEN_WIDTH + tpx);
-			surface_pixels[target_surface_offset] = color;
+				uint8_t tpx = screen_x + tx;
+				uint8_t tpy = screen_y + ty;
+				uint32_t target_surface_offset = (tpy * VIRTUAL_SCREEN_WIDTH + tpx);
+				surface_pixels[target_surface_offset] = color;
+			}
 		}
 	}
 }
@@ -157,13 +159,26 @@ static void render_background_chars(uint32_t* surface_pixels, enias_ppu* ppu)
 	}
 }
 
+static void render_sprites(uint32_t* surface_pixels, enias_ppu* ppu)
+{
+	for (uint8_t i = 0; i < 64; ++i) {
+		const enias_sprite_info* sprite = ppu->sprites + i;
+		uint8_t tile_index = sprite->tile;
+		uint8_t screen_x = sprite->x;
+		uint8_t screen_y = sprite->y;
+		tile_to_screen(surface_pixels, ppu, tile_index, screen_x, screen_y);
+	}
+}
+
 void render(SDL_Surface* surface, enias_ppu* ppu, const uint8_t* memory)
 {
+	SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0x90, 0x90, 0xFF));
 	SDL_LockSurface(surface);
 
 	uint32_t* pixels = surface->pixels;
 
 	render_background_chars(pixels, ppu);
+	render_sprites(pixels, ppu);
 
 	SDL_UnlockSurface(surface);
 }
