@@ -181,7 +181,6 @@ int main(int argc, char* args[])
 
 	SDL_Window* window = 0;
 	SDL_Surface* screenSurface = 0;
-
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 	}
@@ -198,6 +197,7 @@ int main(int argc, char* args[])
 	SDL_Surface* virtual_screen_surface = create_surface(VIRTUAL_SCREEN_WIDTH, VIRTUAL_SCREEN_HEIGHT);
 	int quit = 0;
 	SDL_Event event;
+
 	while (!quit) {
 		if (SDL_PollEvent(&event)) {
 			/*
@@ -226,9 +226,10 @@ int main(int argc, char* args[])
 		zany_cpu_set_entry(&engine.cpu);
 		zany_run(&engine.cpu);
 		setup_ppu(&engine.ppu, engine.cpu.memory);
+
 		render(virtual_screen_surface, &engine.ppu, engine.cpu.memory);
 		update_screen(engine.window, engine.screen_surface, virtual_screen_surface);
-		// SDL_Delay(100);
+		SDL_Delay(12);
 	}
 
 	SDL_DestroyWindow(window);
