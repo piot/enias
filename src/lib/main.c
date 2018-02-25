@@ -50,6 +50,7 @@ typedef struct enias_palette_info {
 typedef struct enias_name_table_info {
 	uint8_t tile_index;
 } enias_name_table_info;
+
 #pragma pack()
 
 typedef struct enias_ppu {
@@ -59,9 +60,19 @@ typedef struct enias_ppu {
 	const uint8_t* chars;
 } enias_ppu;
 
+typedef struct enias_gamepad {
+	uint8_t normal;
+	uint8_t extended;
+} enias_gamepad;
+
+typedef struct enias_input {
+	enias_gamepad gamepads[2];
+} enias_input;
+
 typedef struct enias_engine {
 	zany_cpu cpu;
 	enias_ppu ppu;
+	enias_input input;
 	SDL_Surface* screen_surface;
 	SDL_Window* window;
 } enias_engine;
@@ -166,7 +177,9 @@ static void render_sprites(uint32_t* surface_pixels, enias_ppu* ppu)
 		uint8_t tile_index = sprite->tile;
 		uint8_t screen_x = sprite->x;
 		uint8_t screen_y = sprite->y;
-		tile_to_screen(surface_pixels, ppu, tile_index, screen_x, screen_y);
+		if (screen_y < VIRTUAL_SCREEN_HEIGHT && screen_x < VIRTUAL_SCREEN_WIDTH) {
+			tile_to_screen(surface_pixels, ppu, tile_index, screen_x, screen_y);
+		}
 	}
 }
 
@@ -192,6 +205,90 @@ static void update_screen(SDL_Window* window, SDL_Surface* screen_surface, SDL_S
 {
 	SDL_BlitScaled(virtual_screen_surface, 0, screen_surface, 0);
 	SDL_UpdateWindowSurface(window);
+}
+
+#define GAMEPAD_A (0x80)
+#define GAMEPAD_B (0x40)
+#define GAMEPAD_SELECT (0x20)
+#define GAMEPAD_START (0x10)
+#define GAMEPAD_UP (0x08)
+#define GAMEPAD_DOWN (0x04)
+#define GAMEPAD_LEFT (0x02)
+#define GAMEPAD_RIGHT (0x01)
+
+static uint8_t get_gamepad_mask(SDL_Keycode code)
+{
+	switch (code) {
+		case SDLK_DOWN:
+			return GAMEPAD_DOWN;
+		case SDLK_UP:
+			return GAMEPAD_UP;
+		case SDLK_LEFT:
+			return GAMEPAD_LEFT;
+		case SDLK_RIGHT:
+			return GAMEPAD_RIGHT;
+	}
+
+	return 0;
+}
+
+static void handle_key(enias_input* input, const SDL_KeyboardEvent* event, int on)
+{
+	uint8_t mask = get_gamepad_mask(event->keysym.sym);
+	enias_gamepad* gamepad = &input->gamepads[0];
+	if (on) {
+		gamepad->normal |= mask;
+	} else {
+		gamepad->normal &= ~mask;
+	}
+	if (mask != 0) {
+		//	printf("Gamepad %02X\n", gamepad->normal);
+	}
+}
+
+static void handle_key_up(enias_input* input, const SDL_KeyboardEvent* event)
+{
+	handle_key(input, event, 0);
+}
+
+static void handle_key_down(enias_input* input, const SDL_KeyboardEvent* event)
+{
+	handle_key(input, event, 1);
+}
+
+static int check_sdl_events(enias_input* input)
+{
+	SDL_Event event;
+	int quit = 0;
+
+	if (SDL_PollEvent(&event)) {
+
+		switch (event.type) {
+			case SDL_QUIT:
+				quit = 1;
+				break;
+			case SDL_KEYDOWN:
+				if (event.key.keysym.sym == SDLK_ESCAPE) {
+					quit = 1;
+				} else {
+					handle_key_down(input, &event.key);
+				}
+				break;
+			case SDL_KEYUP:
+				handle_key_up(input, &event.key);
+				break;
+		}
+	}
+
+	return quit;
+}
+
+static void set_input_to_memory(const enias_input* input, uint8_t* memory)
+{
+	for (size_t i = 0; i < 2; ++i) {
+		memory[0xff00 + i * 2] = input->gamepads[i].normal;
+		memory[0xff00 + i * 2 + 1] = input->gamepads[i].extended;
+	}
 }
 
 int main(int argc, char* argv[])
@@ -220,33 +317,10 @@ int main(int argc, char* argv[])
 	engine.screen_surface = screenSurface;
 	SDL_Surface* virtual_screen_surface = create_surface(VIRTUAL_SCREEN_WIDTH, VIRTUAL_SCREEN_HEIGHT);
 	int quit = 0;
-	SDL_Event event;
 
 	while (!quit) {
-		if (SDL_PollEvent(&event)) {
-			/*
-			if (event.type == SDL_MOUSEMOTION) {
-				mx = event.motion.x;
-				my = event.motion.y;
-			}
-
-			if (event.type == SDL_MOUSEBUTTONDOWN) {
-				if (hut.getselected() && hut.getplacable()) {
-					hut.place(map);
-				}
-			}
-			*/
-
-			if (event.type == SDL_QUIT) {
-				quit = 1;
-			}
-
-			switch (event.key.keysym.sym) {
-				case SDLK_ESCAPE:
-					quit = 1;
-					break;
-			}
-		}
+		quit = check_sdl_events(&engine.input);
+		set_input_to_memory(&engine.input, engine.cpu.memory);
 		zany_cpu_set_entry(&engine.cpu);
 		zany_run(&engine.cpu);
 		setup_ppu(&engine.ppu, engine.cpu.memory);
