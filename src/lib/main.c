@@ -194,10 +194,14 @@ static void update_screen(SDL_Window* window, SDL_Surface* screen_surface, SDL_S
 	SDL_UpdateWindowSurface(window);
 }
 
-int main(int argc, char* args[])
+int main(int argc, char* argv[])
 {
+	if (argc < 2) {
+		printf("\nUsage: enias prg-file\n");
+		return 0;
+	}
 	zany_cpu_init(&engine.cpu);
-	zany_load(&engine.cpu, "game.prg");
+	zany_load(&engine.cpu, argv[1]);
 
 	SDL_Window* window = 0;
 	SDL_Surface* screenSurface = 0;
