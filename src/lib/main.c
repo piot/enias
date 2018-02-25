@@ -170,9 +170,14 @@ static void render_sprites(uint32_t* surface_pixels, enias_ppu* ppu)
 	}
 }
 
+void fill_background_color(SDL_Surface* surface, const enias_palette_info* color)
+{
+	SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, color->r, color->g, color->b));
+}
+
 void render(SDL_Surface* surface, enias_ppu* ppu, const uint8_t* memory)
 {
-	SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0x90, 0x90, 0xFF));
+	fill_background_color(surface, &ppu->palette[0]);
 	SDL_LockSurface(surface);
 
 	uint32_t* pixels = surface->pixels;
