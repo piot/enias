@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 #include "opcode.h"
+#include <stdlib.h>
 #include <zany/cpu.h>
 #include <zany/run.h>
 
@@ -126,7 +127,8 @@ static inline void sub(zany_cpu* cpu, uint8_t r1)
 	cpu->a = (uint8_t) extended;
 }
 
-static void wait()
+#if defined ZANY_DEBUG_OPCODE
+static void sleep_a_while()
 {
 	struct timespec ts;
 	ts.tv_sec = 0;
@@ -134,15 +136,18 @@ static void wait()
 
 	nanosleep(&ts, &ts);
 }
+#endif
 
-void zany_run(zany_cpu* cpu)
+int zany_run(zany_cpu* cpu)
 {
 	uint8_t r, arg1, arg2;
 	uint16_t r1, r2;
 
 	for (;;) {
 		uint8_t opcode = READ_OCTET(cpu);
-		// TYRAN_LOG_INFO("opcode:%02X a:%02X x:%02X y:%02X pc:%04X sr:%02X", opcode, cpu->a, cpu->x, cpu->y, cpu->pc, cpu->sr);
+#if ZANY_DEBUG_OPCODE
+		TYRAN_LOG_INFO("opcode:%02X a:%02X x:%02X y:%02X pc:%04X sr:%02X", opcode, cpu->a, cpu->x, cpu->y, cpu->pc, cpu->sr);
+#endif
 		switch (opcode) {
 #include "opcodes/arithmetic.inc"
 #include "opcodes/branch.inc"
@@ -156,10 +161,16 @@ void zany_run(zany_cpu* cpu)
 #include "opcodes/stack.inc"
 #include "opcodes/store.inc"
 #include "opcodes/transfer.inc"
+			case NOP:
+				break;
 			default:
 				TYRAN_LOG_WARN("Unknown opcode:%02X", opcode);
+				return -1;
 				break;
 		}
-		// wait();
+#if ZANY_DEBUG_OPCODE
+		sleep_a_while();
+#endif
 	}
+	return 0;
 }

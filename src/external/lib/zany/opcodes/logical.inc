@@ -136,7 +136,7 @@ case ORA_IND_Y:
 /* --------------------------------------- */
 
 case BIT_ABS:
-	READ_ABSOLUTE_MEMORY_WITH_OFFSET(cpu, 0)
+	READ_ABSOLUTE_MEMORY_WITH_OFFSET(cpu, 0);
     set_flag(cpu, FLAG_ZERO, !(r & cpu->a));
     set_flag(cpu, FLAG_OVERFLOW, r & 0x40);
     set_flag(cpu, FLAG_NEGATIVE, r & 0x80);

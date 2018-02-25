@@ -19,8 +19,7 @@ case JSR_ABS:
 case RTS:
 	if (cpu->sp == 0xff) {
 		//TYRAN_LOG_INFO("Run is complete.\n");
-
-		return;
+		return 0;
 	}
     arg1 = STACK_POP(cpu);
     cpu->pc = ABSOLUTE_MEMORY_OFFSET(arg1, STACK_POP(cpu), 0);

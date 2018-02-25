@@ -322,7 +322,11 @@ int main(int argc, char* argv[])
 		quit = check_sdl_events(&engine.input);
 		set_input_to_memory(&engine.input, engine.cpu.memory);
 		zany_cpu_set_entry(&engine.cpu);
-		zany_run(&engine.cpu);
+		int error_code = zany_run(&engine.cpu);
+		if (error_code) {
+			printf("ERR: cpu error code:%d\n", error_code);
+			return error_code;
+		}
 		setup_ppu(&engine.ppu, engine.cpu.memory);
 
 		render(virtual_screen_surface, &engine.ppu, engine.cpu.memory);

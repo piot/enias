@@ -28,6 +28,6 @@ SOFTWARE.
 
 struct zany_cpu;
 
-void zany_run(struct zany_cpu* cpu);
+int zany_run(struct zany_cpu* cpu);
 
 #endif
