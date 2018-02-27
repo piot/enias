@@ -6,6 +6,13 @@
 
 ## Compile
 
+Make sure that you have the sdl2 libraries installed.
+
+```
+brew install sdl2
+```
+
+
 ```
 cd src
 ./compile.sh
