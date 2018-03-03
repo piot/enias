@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 #include <SDL2/SDL.h>
+#include <enias/sound_chip.h>
 #include <zany/cpu.h>
 #include <zany/loader.h>
 #include <zany/run.h>
@@ -58,6 +59,8 @@ typedef struct enias_ppu {
 	const enias_palette_info* palette;
 	const enias_sprite_info* sprites;
 	const uint8_t* chars;
+	uint8_t scroll_x;
+	uint8_t scroll_y;
 } enias_ppu;
 
 typedef struct enias_gamepad {
@@ -73,6 +76,7 @@ typedef struct enias_engine {
 	zany_cpu cpu;
 	enias_ppu ppu;
 	enias_input input;
+	enias_sound_chip sound;
 	SDL_Surface* screen_surface;
 	SDL_Window* window;
 } enias_engine;
@@ -150,10 +154,18 @@ static void setup_ppu(enias_ppu* ppu, const uint8_t* memory)
 	const enias_name_table_info* name_table = (const enias_name_table_info*) get_address_indirect(memory, 0xfe06);
 	const uint8_t* tile_start = get_address_indirect(memory, 0xfe00);
 
+	/*
+		for (size_t i = 0; i < 16; ++i) {
+			printf("palette %d: %02X %02X %02X\n", i, palette[i].r, palette[i].g, palette[i].b);
+		}
+	*/
+
 	ppu->sprites = sprite_info;
 	ppu->palette = palette;
 	ppu->name_table = name_table;
 	ppu->chars = tile_start;
+	ppu->scroll_x = memory[0xfe08];
+	ppu->scroll_y = memory[0xfe09];
 }
 
 static void render_background_chars(uint32_t* surface_pixels, enias_ppu* ppu)
@@ -163,8 +175,8 @@ static void render_background_chars(uint32_t* surface_pixels, enias_ppu* ppu)
 			uint32_t name_table_offset = y * 32 + x;
 			const enias_name_table_info* name_entry = ppu->name_table + name_table_offset;
 			uint8_t tile_index = name_entry->tile_index;
-			uint8_t screen_x = x * 8;
-			uint8_t screen_y = y * 8;
+			uint8_t screen_x = x * 8 - ppu->scroll_x;
+			uint8_t screen_y = y * 8 - ppu->scroll_y;
 			tile_to_screen(surface_pixels, ppu, tile_index, screen_x, screen_y);
 		}
 	}
@@ -299,6 +311,7 @@ int main(int argc, char* argv[])
 	}
 	zany_cpu_init(&engine.cpu);
 	zany_load(&engine.cpu, argv[1]);
+	enias_sound_chip_init(&engine.sound);
 
 	SDL_Window* window = 0;
 	SDL_Surface* screenSurface = 0;
@@ -331,6 +344,7 @@ int main(int argc, char* argv[])
 
 		render(virtual_screen_surface, &engine.ppu, engine.cpu.memory);
 		update_screen(engine.window, engine.screen_surface, virtual_screen_surface);
+		enias_sound_chip_update(&engine.sound);
 		SDL_Delay(12);
 	}
 
