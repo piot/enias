@@ -50,7 +50,6 @@ typedef int8_t shout_sbyte;
 typedef struct shout_wave {
 	shout_dword sample_loop_start;
 	shout_dword sample_loop_length;
-
 	shout_byte volume;
 	shout_sbyte fine_tune;
 	shout_byte loop_type;
@@ -71,11 +70,11 @@ typedef struct shout_instrument {
 } shout_instrument;
 
 typedef struct shout_channel {
-	uint8_t note;
-	uint8_t pitch;
 	uint8_t instrument_index;
+	uint8_t note;
 	uint8_t volume_value;
 	uint8_t panoration;
+	uint8_t pitch;
 	uint8_t fx1_mix;
 	uint8_t fx2_mix;
 	uint8_t low_pass;

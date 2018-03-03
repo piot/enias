@@ -9,6 +9,6 @@ typedef struct enias_sound_chip {
 } enias_sound_chip;
 
 int enias_sound_chip_init(enias_sound_chip* self);
-void enias_sound_chip_update(enias_sound_chip* self);
+void enias_sound_chip_update(enias_sound_chip* self, const uint8_t* memory);
 
 #endif

@@ -239,6 +239,10 @@ static uint8_t get_gamepad_mask(SDL_Keycode code)
 			return GAMEPAD_LEFT;
 		case SDLK_RIGHT:
 			return GAMEPAD_RIGHT;
+		case SDLK_z:
+			return GAMEPAD_A;
+		case SDLK_x:
+			return GAMEPAD_B;
 	}
 
 	return 0;
@@ -254,7 +258,7 @@ static void handle_key(enias_input* input, const SDL_KeyboardEvent* event, int o
 		gamepad->normal &= ~mask;
 	}
 	if (mask != 0) {
-		//	printf("Gamepad %02X\n", gamepad->normal);
+		// printf("Gamepad %02X\n", gamepad->normal);
 	}
 }
 
@@ -344,7 +348,7 @@ int main(int argc, char* argv[])
 
 		render(virtual_screen_surface, &engine.ppu, engine.cpu.memory);
 		update_screen(engine.window, engine.screen_surface, virtual_screen_surface);
-		enias_sound_chip_update(&engine.sound);
+		enias_sound_chip_update(&engine.sound, engine.cpu.memory);
 		SDL_Delay(12);
 	}
 

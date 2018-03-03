@@ -27,6 +27,7 @@ SOFTWARE.
 #include <enias/sound_chip_sdl2.h>
 
 #include <stdio.h>
+#include <string.h>
 
 static void audio_callback(void* _self, int16_t* sample, int sample_count)
 {
@@ -76,17 +77,51 @@ int enias_sound_chip_init(enias_sound_chip* self)
 	return 0;
 }
 
-void enias_sound_chip_update(enias_sound_chip* self)
+static inline const uint8_t* get_address_indirect(const uint8_t* memory, const uint16_t address)
 {
-	self->debug_frame_count++;
-	uint32_t frame = (self->debug_frame_count / 1);
-	uint32_t act_frame = frame % 4;
-	uint32_t note_frame = (frame / 4) % (4 * 4);
-	if (1) {
-		uint8_t note_to_play = 12 * 4 + note_frame;
-		int should_be_on = (act_frame != 3);
-		uint8_t note_on = should_be_on ? 0x80 : 0x00;
-		self->chip.channels[0].note = note_on | note_to_play;
+	uint16_t memory_address = memory[address] + (memory[address + 1] << 8);
+	return memory + memory_address;
+}
+
+#pragma pack(1)
+typedef struct enias_sound_wave {
+	uint8_t sample_lo;
+	uint8_t sample_hi;
+	uint8_t sample_length_lo;
+	uint8_t sample_length_hi;
+	uint8_t loop_type;
+	uint8_t sample_loop_start_lo;
+	uint8_t sample_loop_start_hi;
+	uint8_t sample_loop_length_lo;
+	uint8_t sample_loop_length_hi;
+	uint8_t relative_note_number;
+} enias_sound_wave;
+#pragma pack()
+
+void enias_sound_chip_update(enias_sound_chip* self, const uint8_t* memory)
+{
+	const shout_instrument* instruments = (const shout_instrument*) get_address_indirect(memory, 0xfe10);
+	const enias_sound_wave* enias_waves = (const enias_sound_wave*) get_address_indirect(memory, 0xfe12);
+	const shout_channel* channels = (const shout_channel*) get_address_indirect(memory, 0xfe14);
+
+	shout_chip* chip = &self->chip;
+	memcpy(chip->instruments, instruments, sizeof(shout_instrument) * MAX_INSTRUMENTS);
+	memcpy(chip->channels, channels, sizeof(shout_channel) * MAX_CHANNELS);
+
+	for (size_t wave_index = 0; wave_index < MAX_WAVES; ++wave_index) {
+		shout_wave* wave = &chip->waves[wave_index];
+		const enias_sound_wave* enias_wave = &enias_waves[wave_index];
+		uint16_t sample_start_address = (enias_wave->sample_hi << 8) + enias_wave->sample_lo;
+		wave->samples = (const int16_t*) (memory + sample_start_address);
+		wave->sample_length = (enias_wave->sample_length_hi << 8) + enias_wave->sample_length_lo;
+		wave->sample_loop_start = (enias_wave->sample_loop_start_hi << 8) + enias_wave->sample_loop_start_lo;
+		wave->sample_loop_length = (enias_wave->sample_loop_length_hi << 8) + enias_wave->sample_loop_length_lo;
+		wave->fine_tune = 0;
+		wave->volume = 32;
+		wave->panning = 127;
+		wave->loop_type = enias_wave->loop_type;
+		wave->relative_note_number = enias_wave->relative_note_number;
 	}
+
 	shout_update_params(&self->chip);
 }
