@@ -23,19 +23,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-#include <enias/machine.h>
+#include <enias/graphics_chip.h>
 
-int main(int argc, char* argv[])
+typedef struct render_info {
+	enias_ppu* ppu;
+	const uint8_t* memory;
+} render_info;
+
+static void render_callback(void* _self, uint32_t* pixels)
 {
-	if (argc < 2) {
-		printf("\nUsage: enias prg-file\n");
-		return 0;
-	}
+	render_info* self = (render_info*) _self;
+	enias_ppu_render(self->ppu, pixels);
+}
 
-	enias_machine enias;
-	enias_machine_init(&enias);
-	enias_machine_load_memory(&enias, argv[1]);
-	enias_machine_go(&enias);
+void enias_graphics_chip_render(enias_graphics_chip* self, const uint8_t* memory)
+{
+	enias_ppu_setup(&self->ppu, memory);
 
-	return 0;
+	render_info info;
+	info.ppu = &self->ppu;
+	info.memory = memory;
+	const enias_palette_info* background_color = &self->ppu.palette[0];
+	uint32_t background_value = background_color->r << 24 | background_color->g << 16 | background_color->b << 8;
+	enias_render_sdl2_render(&self->render_sdl2, background_value, &info, render_callback);
+}
+
+void enias_graphics_chip_init(enias_graphics_chip* self)
+{
+	enias_render_sdl2_init(&self->render_sdl2, ENIAS_PPU_SCREEN_WIDTH, ENIAS_PPU_SCREEN_HEIGHT);
 }

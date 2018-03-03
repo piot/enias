@@ -23,19 +23,41 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-#include <enias/machine.h>
+#ifndef enias_ppu_h
+#define enias_ppu_h
 
-int main(int argc, char* argv[])
-{
-	if (argc < 2) {
-		printf("\nUsage: enias prg-file\n");
-		return 0;
-	}
+#include <stdint.h>
 
-	enias_machine enias;
-	enias_machine_init(&enias);
-	enias_machine_load_memory(&enias, argv[1]);
-	enias_machine_go(&enias);
+#define ENIAS_PPU_SCREEN_WIDTH (256)
+#define ENIAS_PPU_SCREEN_HEIGHT (224)
 
-	return 0;
-}
+#pragma pack(1)
+typedef struct enias_sprite_info {
+	uint8_t x;
+	uint8_t y;
+	uint8_t tile;
+	uint8_t flags;
+} enias_sprite_info;
+typedef struct enias_palette_info {
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+} enias_palette_info;
+typedef struct enias_name_table_info {
+	uint8_t tile_index;
+} enias_name_table_info;
+#pragma pack()
+
+typedef struct enias_ppu {
+	const enias_name_table_info* name_table;
+	const enias_palette_info* palette;
+	const enias_sprite_info* sprites;
+	const uint8_t* chars;
+	uint8_t scroll_x;
+	uint8_t scroll_y;
+} enias_ppu;
+
+void enias_ppu_setup(enias_ppu* ppu, const uint8_t* memory);
+void enias_ppu_render(enias_ppu* ppu, uint32_t* pixels);
+
+#endif

@@ -33,9 +33,6 @@ static enias_sound_chip_callback g_enias_sound_chip_callback;
 
 static void audio_callback(void* _self, Uint8* target, int octet_length)
 {
-	// thunder_sound_driver* self = _self;
-	// thunder_audio_buffer* sound_buffer = self->buffer;
-
 	if ((octet_length % 4) != 0) {
 		TYRAN_LOG_ERROR("ERROR!!!!!");
 	}

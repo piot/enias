@@ -23,19 +23,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-#include <enias/machine.h>
+#ifndef enias_input_chip_h
+#define enias_input_chip_h
 
-int main(int argc, char* argv[])
-{
-	if (argc < 2) {
-		printf("\nUsage: enias prg-file\n");
-		return 0;
-	}
+#include <stdint.h>
 
-	enias_machine enias;
-	enias_machine_init(&enias);
-	enias_machine_load_memory(&enias, argv[1]);
-	enias_machine_go(&enias);
+#include <enias/ipu.h>
 
-	return 0;
-}
+typedef struct enias_input_chip {
+	enias_ipu ipu;
+} enias_input_chip;
+
+void enias_input_chip_init(enias_input_chip* self);
+int enias_input_chip_update(enias_input_chip* self, uint8_t* target_memory);
+
+#endif

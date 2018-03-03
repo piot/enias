@@ -23,19 +23,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-#include <enias/machine.h>
+#ifndef enias_render_sdl2_h
+#define enias_render_sdl2_h
 
-int main(int argc, char* argv[])
-{
-	if (argc < 2) {
-		printf("\nUsage: enias prg-file\n");
-		return 0;
-	}
+#include <SDL2/SDL.h>
 
-	enias_machine enias;
-	enias_machine_init(&enias);
-	enias_machine_load_memory(&enias, argv[1]);
-	enias_machine_go(&enias);
+typedef struct enias_render_sdl2 {
+	SDL_Window* window;
+	SDL_Surface* screen_surface;
+	SDL_Surface* virtual_screen_surface;
+} enias_render_sdl2;
 
-	return 0;
-}
+typedef void (*enias_render_sdl2_callback)(void* self, uint32_t* pixels);
+
+void enias_render_sdl2_init(enias_render_sdl2* self, int width, int height);
+void enias_render_sdl2_render(enias_render_sdl2* self, uint32_t color, void* userdata, enias_render_sdl2_callback callback);
+
+#endif

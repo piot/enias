@@ -23,19 +23,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-#include <enias/machine.h>
+#ifndef enias_graphics_chip_h
+#define enias_graphics_chip_h
 
-int main(int argc, char* argv[])
-{
-	if (argc < 2) {
-		printf("\nUsage: enias prg-file\n");
-		return 0;
-	}
+#include <enias/ppu.h>
+#include <enias/render_sdl2.h>
 
-	enias_machine enias;
-	enias_machine_init(&enias);
-	enias_machine_load_memory(&enias, argv[1]);
-	enias_machine_go(&enias);
+typedef struct enias_graphics_chip {
+	enias_render_sdl2 render_sdl2;
+	enias_ppu ppu;
+} enias_graphics_chip;
 
-	return 0;
-}
+void enias_graphics_chip_init(enias_graphics_chip* self);
+void enias_graphics_chip_render(enias_graphics_chip* self, const uint8_t* memory);
+
+#endif

@@ -23,19 +23,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-#include <enias/machine.h>
+#ifndef enias_ipu_h
+#define enias_ipu_h
 
-int main(int argc, char* argv[])
-{
-	if (argc < 2) {
-		printf("\nUsage: enias prg-file\n");
-		return 0;
-	}
+#include <stdint.h>
 
-	enias_machine enias;
-	enias_machine_init(&enias);
-	enias_machine_load_memory(&enias, argv[1]);
-	enias_machine_go(&enias);
+#define ENIAS_IPU_GAMEPAD_A (0x80)
+#define ENIAS_IPU_GAMEPAD_B (0x40)
+#define ENIAS_IPU_GAMEPAD_SELECT (0x20)
+#define ENIAS_IPU_GAMEPAD_START (0x10)
+#define ENIAS_IPU_GAMEPAD_UP (0x08)
+#define ENIAS_IPU_GAMEPAD_DOWN (0x04)
+#define ENIAS_IPU_GAMEPAD_LEFT (0x02)
+#define ENIAS_IPU_GAMEPAD_RIGHT (0x01)
 
-	return 0;
-}
+typedef struct enias_ipu_gamepad {
+	uint8_t normal;
+	uint8_t extended;
+} enias_ipu_gamepad;
+
+typedef struct enias_ipu {
+	enias_ipu_gamepad gamepads[2];
+} enias_ipu;
+
+void enias_ipu_update(const enias_ipu* self, uint8_t* memory);
+
+#endif

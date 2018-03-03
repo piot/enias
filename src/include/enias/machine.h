@@ -23,19 +23,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-#include <enias/machine.h>
+#ifndef enias_machine_h
+#define enias_machine_h
 
-int main(int argc, char* argv[])
-{
-	if (argc < 2) {
-		printf("\nUsage: enias prg-file\n");
-		return 0;
-	}
+#include <enias/graphics_chip.h>
+#include <enias/input_chip.h>
+#include <enias/sound_chip.h>
+#include <zany/cpu.h>
 
-	enias_machine enias;
-	enias_machine_init(&enias);
-	enias_machine_load_memory(&enias, argv[1]);
-	enias_machine_go(&enias);
+typedef struct enias_machine {
+	zany_cpu cpu;
+	enias_graphics_chip graphics;
+	enias_input_chip input;
+	enias_sound_chip sound;
+} enias_machine;
 
-	return 0;
-}
+void enias_machine_init(enias_machine* self);
+void enias_machine_load_memory(enias_machine* self, const char* filename);
+int enias_machine_go(enias_machine* self);
+
+#endif

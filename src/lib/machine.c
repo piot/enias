@@ -24,18 +24,42 @@ SOFTWARE.
 
 */
 #include <enias/machine.h>
+#include <zany/loader.h>
+#include <zany/run.h>
 
-int main(int argc, char* argv[])
+void enias_machine_init(enias_machine* self)
 {
-	if (argc < 2) {
-		printf("\nUsage: enias prg-file\n");
-		return 0;
+	zany_cpu_init(&self->cpu);
+	enias_graphics_chip_init(&self->graphics);
+	enias_input_chip_init(&self->input);
+	enias_sound_chip_init(&self->sound);
+}
+
+void enias_machine_load_memory(enias_machine* self, const char* filename)
+{
+	zany_load(&self->cpu, filename);
+}
+
+static int loop(enias_machine* self)
+{
+	int quit = 0;
+
+	while (!quit) {
+		zany_cpu_set_entry(&self->cpu);
+		int error_code = zany_run(&self->cpu);
+		if (error_code) {
+			printf("ERR: cpu error code:%d\n", error_code);
+			return error_code;
+		}
+		enias_sound_chip_update(&self->sound, self->cpu.memory);
+		quit = enias_input_chip_update(&self->input, self->cpu.memory);
+		enias_graphics_chip_render(&self->graphics, self->cpu.memory);
 	}
 
-	enias_machine enias;
-	enias_machine_init(&enias);
-	enias_machine_load_memory(&enias, argv[1]);
-	enias_machine_go(&enias);
+	return quit;
+}
 
-	return 0;
+int enias_machine_go(enias_machine* self)
+{
+	return loop(self);
 }
