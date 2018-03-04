@@ -51,10 +51,6 @@ static void audio_callback(void* _self, Uint8* target, int octet_length)
 int enias_sound_chip_sdl2_init(void* userdata, enias_sound_chip_callback callback)
 {
 	g_enias_sound_chip_callback = callback;
-	if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-		return 1;
-	}
-
 	SDL_AudioSpec wav_spec;
 
 	wav_spec.callback = audio_callback;

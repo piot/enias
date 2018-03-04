@@ -61,7 +61,9 @@ void enias_render_sdl2_init(enias_render_sdl2* self, int VIRTUAL_SCREEN_WIDTH, i
 	int SCREEN_WIDTH = VIRTUAL_SCREEN_WIDTH * 3;
 	int SCREEN_HEIGHT = VIRTUAL_SCREEN_HEIGHT * 3;
 
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
+	SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
+
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_NOPARACHUTE | SDL_INIT_AUDIO) < 0) {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 	}
 
