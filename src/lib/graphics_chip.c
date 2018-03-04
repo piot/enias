@@ -44,7 +44,7 @@ void enias_graphics_chip_render(enias_graphics_chip* self, const uint8_t* memory
 	info.ppu = &self->ppu;
 	info.memory = memory;
 	const enias_palette_info* background_color = &self->ppu.palette[0];
-	uint32_t background_value = background_color->r << 24 | background_color->g << 16 | background_color->b << 8;
+	uint32_t background_value = background_color->r << 16 | background_color->g << 8 | background_color->b;
 	enias_render_sdl2_render(&self->render_sdl2, background_value, &info, render_callback);
 }
 

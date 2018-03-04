@@ -26,6 +26,10 @@ SOFTWARE.
 #include <enias/ppu.h>
 #include <stddef.h>
 
+#define ENIAS_PPU_SPRITE_FLAG_PRIORITY (0x20)
+#define ENIAS_PPU_SPRITE_FLAG_HFLIP (0x40)
+#define ENIAS_PPU_SPRITE_FLAG_VFLIP (0x80)
+
 static void tile_to_screen(uint32_t* surface_pixels, const enias_ppu* ppu, size_t tile_index, uint8_t screen_x, uint8_t screen_y)
 {
 	if (screen_y >= ENIAS_PPU_SCREEN_HEIGHT) {
@@ -83,14 +87,18 @@ static void render_background_chars(uint32_t* surface_pixels, enias_ppu* ppu)
 	}
 }
 
-static void render_sprites(uint32_t* surface_pixels, enias_ppu* ppu)
+static void render_sprites(uint32_t* surface_pixels, enias_ppu* ppu, uint8_t priority)
 {
 	for (uint8_t i = 0; i < 64; ++i) {
 		const enias_sprite_info* sprite = ppu->sprites + i;
 		uint8_t tile_index = sprite->tile;
 		uint8_t screen_x = sprite->x;
 		uint8_t screen_y = sprite->y;
-		if (screen_y < ENIAS_PPU_SCREEN_HEIGHT) {
+		uint8_t flags = sprite->flags;
+
+		int should_be_shown = (flags & ENIAS_PPU_SPRITE_FLAG_PRIORITY) == priority;
+
+		if (should_be_shown && (screen_y < ENIAS_PPU_SCREEN_HEIGHT)) {
 			tile_to_screen(surface_pixels, ppu, tile_index, screen_x, screen_y);
 		}
 	}
@@ -113,6 +121,7 @@ void enias_ppu_setup(enias_ppu* ppu, const uint8_t* memory)
 
 void enias_ppu_render(enias_ppu* self, uint32_t* pixels)
 {
+	render_sprites(pixels, self, 0);
 	render_background_chars(pixels, self);
-	render_sprites(pixels, self);
+	render_sprites(pixels, self, ENIAS_PPU_SPRITE_FLAG_PRIORITY);
 }
