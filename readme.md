@@ -20,6 +20,7 @@ cd src
 ./enias examples/hackman/hackman.prg
 ```
 
+
 ## Memory Layout
 All addresses are "indirect". The 16-bit value stored is used as the actual address.
 
@@ -30,6 +31,10 @@ All addresses are "indirect". The 16-bit value stored is used as the actual addr
 | $FE04-$FE05     | palette         |   |
 | $FE06-$FE07     | name-table      |   |
 | $FE08-$FE0D     | name scrolling  |  $FE08 x-offset (0-255), $FE09 y-offset (0-255), start_row_x, start_col_y, width, height  |
+| $FE10-$FE11     | instruments      |   |
+| $FE12-$FE13     | waves      |   |
+| $FE14-$FE15     | channels      |   |
+| ------------    | ------------   |   |
 | $FF00-$FF05     | input           |   |
 
 ## Tiles
@@ -74,19 +79,18 @@ Four gamepads, each has the following
 
 
 ## Sound Chip
-Not implemented yet.
 
 ### Voice / Channel
 16 voices. Each voice has the following info:
 
 | Octet Offset | Name       | bits     | Description       |
 | -------------| -----------|----------|-------------------|
-| 0            | instrument | 000iiiii | index into instruments.|
-| 1            | key        | kkkkkkkk | 0: key off |
-| 2            | pitch      | ffffffff | signed diff for key |
-| 3            | velocity   | vvvvvvvv | |
-| 4            | volume     | vvvvvvvv | |
-| 5            | pan        | vvvvvvvv | 0: all left, 255: all right|
+| 0            | instrument | 000iiiii | index into instruments. (0-23)|
+| 1            | note       | kkkkkkkk | 0: key off |
+| 2            | velocity   | vvvvvvvv | |
+| 3            | pan        | vvvvvvvv | 0: all left, 255: all right|
+| 4            | pitch      | ffffffff | signed diff for key |
+| 5            | volume     | vvvvvvvv | |
 | 6            | fx1-gain   | ffffffff | fx1 = feed to reverb |
 | 7            | fx2-gain   | ffffffff | fx2 = feed to delay  |
 | 8            | low-pass   | ffffffff | |
@@ -100,17 +104,32 @@ Not implemented yet.
 
 | Octet Offset | Name                    | bits     | Description       |
 | -------------| ------------------------|----------|-------------------|
+| 0            | wave-index              | wwwwwwww | 0-64.  index into waves |
+| 1            | attack                  | aaaaaaaa | time before maximum volume |
+| 2            | decay                   | dddddddd | time before it reaches sustain volume |
+| 3            | sustain                 | ssssssss | (optional?) volume level for the sustain part. |
+| 4            | release                 | rrrrrrrr | (optional?) time before sound reaches zero volume. |
+
+
+### Wave
+
+64 Waves.
+
+| Octet Offset | Name                    | bits     | Description       |
+| -------------| ------------------------|----------|-------------------|
 | 0            | sample-pointer (low)    | wwwwwwww | |
 | 1            | sample-pointer (high)   | wwwwwwww | |
 | 2            | sample-length (low)     | wwwwwwww | |
 | 3            | sample-length (high)    | wwwwwwww | |
-| 4            | attack                  | aaaaaaaa | time before maximum volume |
-| 5            | decay                   | dddddddd | time before it reaches sustain volume |
-| 6            | sustain                 | ssssssss | (optional?) volume level for the sustain part. |
-| 7            | release                 | rrrrrrrr | (optional?) time before sound reaches zero volume. |
-| 8            | loop start (high)       | rrrrrrrr | loop start point |
-| 9            | loop end (high)         | rrrrrrrr | loop end point |
-| A            | status                  | wll00000 | w: (0=8-bit samples, 1:16-bit samples). loop-mode (0: no loop, 1: forward, 2: ping-pong) |
+| 4            | loop                    | wll00000 | w: (0=8-bit samples, 1:16-bit samples). loop-mode (0: no loop, 1: forward, 2: ping-pong) |
+| 5            | loop start (low)        | rrrrrrrr | loop start point |
+| 6            | loop start (high)       | rrrrrrrr | |
+| 7            | loop length (low)       | rrrrrrrr | loop length |
+| 8            | loop length (high)      | rrrrrrrr | |
+| 9            | relative_note_number    | rrrrrrrr | |
+| A            | volume                  | rrrrrrrr | |
+
+
 
 ### Effect settings
 One global effect system
