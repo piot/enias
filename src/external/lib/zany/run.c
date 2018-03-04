@@ -131,7 +131,7 @@ static inline void add(zany_cpu* cpu, uint8_t r1)
 
 static inline void sub(zany_cpu* cpu, uint8_t r1)
 {
-	uint16_t extended = r1 + cpu->a - r1 - !get_flag(cpu, FLAG_CARRY);
+	uint16_t extended = 0xff + cpu->a - r1 + get_flag(cpu, FLAG_CARRY);
 	set_flag(cpu, FLAG_CARRY, !(extended & 0x8000));
 	set_flag(cpu, FLAG_NEGATIVE, extended & 0x80);
 	set_flag(cpu, FLAG_OVERFLOW, 0xFF00 & extended);
