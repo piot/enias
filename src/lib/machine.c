@@ -38,6 +38,8 @@ void enias_machine_init(enias_machine* self)
 void enias_machine_load_memory(enias_machine* self, const char* filename)
 {
 	zany_load(&self->cpu, filename);
+	self->cpu.memory[ZANY_CONTINUE_VECTOR] = 0x00;
+	self->cpu.memory[ZANY_CONTINUE_VECTOR + 1] = 0x02;
 }
 
 static int loop(enias_machine* self)
@@ -45,7 +47,7 @@ static int loop(enias_machine* self)
 	int quit = 0;
 
 	while (!quit) {
-		zany_cpu_set_entry(&self->cpu);
+		zany_cpu_set_continue_vector(&self->cpu);
 		int error_code = zany_run(&self->cpu);
 		if (error_code) {
 			printf("ERR: cpu error code:%d\n", error_code);

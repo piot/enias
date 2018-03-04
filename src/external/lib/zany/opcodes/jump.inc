@@ -11,7 +11,7 @@ case JMP_IND:
 case JSR_ABS:
 	READ_ABSOLUTE_MEMORY_ADDRESS(cpu, 0);
 	if (r1 == 0x1) {
-		printf("Special function 0x1. X = %2x\n", cpu->x);
+		printf("Special function 0x1. X = %02x\n", cpu->x);
 	} else if(r1 == 0x2) {
 		printf("Special function 0x2. X = %2x, Y = %2x\n", cpu->x, cpu->y);
 	} else if(r1 == 0x3) {

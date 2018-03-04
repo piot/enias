@@ -29,6 +29,7 @@ SOFTWARE.
 #include <stdint.h>
 
 #define ZANY_MEMORY_SIZE (0x10000)
+#define ZANY_CONTINUE_VECTOR (0xfff8)
 
 typedef struct zany_cpu {
 	uint16_t pc;
@@ -40,4 +41,6 @@ typedef struct zany_cpu {
 
 void zany_cpu_init(zany_cpu* cpu);
 void zany_cpu_set_entry(zany_cpu* cpu);
+void zany_cpu_set_continue_vector(zany_cpu* cpu);
+
 #endif

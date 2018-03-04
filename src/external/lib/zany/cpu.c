@@ -30,6 +30,11 @@ void zany_cpu_set_entry(zany_cpu* cpu)
 	cpu->pc = 0x0200;
 }
 
+void zany_cpu_set_continue_vector(zany_cpu* cpu)
+{
+	cpu->pc = (cpu->memory[0xfff9] << 8) | cpu->memory[0xfff8];
+}
+
 void zany_cpu_init(zany_cpu* cpu)
 {
 	cpu->sp = 0xff;
