@@ -34,12 +34,14 @@ case AND_ABS_Y:
     break;
 
 case AND_IND_X:
-    cpu->a &= READ_INDEXED_INDIRECT(cpu, cpu->x);
+	READ_INDEXED_INDIRECT_ZP_OFFSET(cpu, cpu->x);
+    cpu->a &= r;
     set_flags(cpu, cpu->a);
     break;
 
 case AND_IND_Y:
-    cpu->a &= READ_INDEXED_INDIRECT(cpu, cpu->y);
+	READ_INDEXED_INDIRECT_PTR_OFFSET(cpu, cpu->y);
+    cpu->a &= r;
     set_flags(cpu, cpu->a);
     break;
 
@@ -79,12 +81,14 @@ case EOR_ABS_Y:
     break;
 
 case EOR_IND_X:
-    cpu->a ^= READ_INDEXED_INDIRECT(cpu, cpu->x);
+	READ_INDEXED_INDIRECT_ZP_OFFSET(cpu, cpu->x);
+    cpu->a ^= r;
     set_flags(cpu, cpu->a);
     break;
 
 case EOR_IND_Y:
-    cpu->a ^= READ_INDEXED_INDIRECT(cpu, cpu->y);
+	READ_INDEXED_INDIRECT_PTR_OFFSET(cpu, cpu->y);
+    cpu->a ^= r;
     set_flags(cpu, cpu->a);
     break;
 
@@ -124,12 +128,14 @@ case ORA_ABS_Y:
     break;
 
 case ORA_IND_X:
-    cpu->a |= READ_INDEXED_INDIRECT(cpu, cpu->x);
+	READ_INDEXED_INDIRECT_ZP_OFFSET(cpu, cpu->x);
+    cpu->a |= r;
     set_flags(cpu, cpu->a);
     break;
 
 case ORA_IND_Y:
-    cpu->a |= READ_INDEXED_INDIRECT(cpu, cpu->y);
+	READ_INDEXED_INDIRECT_PTR_OFFSET(cpu, cpu->y);
+    cpu->a |= r;
     set_flags(cpu, cpu->a);
     break;
 

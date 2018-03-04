@@ -19,11 +19,13 @@ case CMP_IMM:
     break;
 
 case CMP_IND_X:
-    cmp(cpu, READ_INDEXED_INDIRECT(cpu, cpu->x), cpu->a);
+	READ_INDEXED_INDIRECT_ZP_OFFSET(cpu, cpu->x);
+    cmp(cpu, r, cpu->a);
     break;
 
 case CMP_IND_Y:
-    cmp(cpu,  READ_INDEXED_INDIRECT(cpu, cpu->y), cpu->a);
+	READ_INDEXED_INDIRECT_PTR_OFFSET(cpu, cpu->y);
+    cmp(cpu, r, cpu->a);
     break;
 
 case CMP_ZP:

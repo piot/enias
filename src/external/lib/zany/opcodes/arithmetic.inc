@@ -19,11 +19,13 @@ case ADC_IMM:
     break;
 
 case ADC_IND_X:
-    add(cpu, READ_INDEXED_INDIRECT(cpu, cpu->x));
+	READ_INDEXED_INDIRECT_ZP_OFFSET(cpu, cpu->x);
+    add(cpu, r);
     break;
 
 case ADC_IND_Y:
-    add(cpu, READ_INDEXED_INDIRECT(cpu, cpu->y));
+	READ_INDEXED_INDIRECT_PTR_OFFSET(cpu, cpu->y);
+    add(cpu, r);
     break;
 
 case ADC_ZP:
@@ -56,11 +58,13 @@ case SBC_IMM:
     break;
 
 case SBC_IND_X:
-    sub(cpu, READ_INDEXED_INDIRECT(cpu, cpu->x));
+	READ_INDEXED_INDIRECT_ZP_OFFSET(cpu, cpu->x);
+    sub(cpu, r);
     break;
 
 case SBC_IND_Y:
-    sub(cpu, READ_INDEXED_INDIRECT(cpu, cpu->y));
+	READ_INDEXED_INDIRECT_PTR_OFFSET(cpu, cpu->y);
+    sub(cpu, r);
     break;
 
 case SBC_ZP:

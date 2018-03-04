@@ -23,12 +23,14 @@ case LDA_IMM:
     break;
 
 case LDA_IND_X:
-    cpu->a = READ_INDEXED_INDIRECT(cpu, cpu->x);
+	READ_INDEXED_INDIRECT_ZP_OFFSET(cpu, cpu->x);
+    cpu->a = r;
     set_flags(cpu, cpu->a);
     break;
 
 case LDA_IND_Y:
-	cpu->a = READ_INDEXED_INDIRECT(cpu, cpu->y);
+	READ_INDEXED_INDIRECT_PTR_OFFSET(cpu, cpu->y);
+	cpu->a = r;
     set_flags(cpu, cpu->a);
     break;
 

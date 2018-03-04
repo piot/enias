@@ -16,12 +16,12 @@ case STA_ABS_Y:
     break;
 
 case STA_IND_X:
-	READ_INDEXED_INDIRECT_MEMORY_ADDRESS(cpu, cpu->x);
+	READ_INDEXED_INDIRECT_MEMORY_ADDRESS_ZP_OFFSET(cpu, cpu->x);
     cpu->memory[r1] = cpu->a;
     break;
 
 case STA_IND_Y:
-	READ_INDEXED_INDIRECT_MEMORY_ADDRESS(cpu, cpu->y);
+	READ_INDEXED_INDIRECT_MEMORY_ADDRESS_PTR_OFFSET(cpu, cpu->y);
     cpu->memory[r1] = cpu->a;
     break;
 
