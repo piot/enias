@@ -53,6 +53,8 @@ static SDL_Surface* create_surface(int width, int height)
 	return surface;
 }
 
+#define ENIAS_FRAME_TIME (16)
+
 void enias_render_sdl2_init(enias_render_sdl2* self, int VIRTUAL_SCREEN_WIDTH, int VIRTUAL_SCREEN_HEIGHT)
 {
 	SDL_Window* window = 0;
@@ -62,6 +64,7 @@ void enias_render_sdl2_init(enias_render_sdl2* self, int VIRTUAL_SCREEN_WIDTH, i
 	int SCREEN_HEIGHT = VIRTUAL_SCREEN_HEIGHT * 3;
 
 	SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
+	SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_NOPARACHUTE | SDL_INIT_AUDIO) < 0) {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -79,6 +82,8 @@ void enias_render_sdl2_init(enias_render_sdl2* self, int VIRTUAL_SCREEN_WIDTH, i
 	self->window = window;
 	self->screen_surface = screen_surface;
 	self->virtual_screen_surface = virtual_screen_surface;
+
+	self->next_frame_tick = 0;
 }
 
 static void fill_background_color(SDL_Surface* surface, uint32_t color)
@@ -86,11 +91,19 @@ static void fill_background_color(SDL_Surface* surface, uint32_t color)
 	SDL_FillRect(surface, 0, color);
 }
 
+static uint32_t ticks_to_sleep(enias_render_sdl2* self)
+{
+	uint32_t now = SDL_GetTicks();
+	if (self->next_frame_tick <= now)
+		return 0;
+	else
+		return self->next_frame_tick - now;
+}
+
 static void update_screen(SDL_Window* window, SDL_Surface* screen_surface, SDL_Surface* virtual_screen_surface)
 {
 	SDL_BlitScaled(virtual_screen_surface, 0, screen_surface, 0);
 	SDL_UpdateWindowSurface(window);
-	SDL_Delay(12);
 }
 
 void enias_render_sdl2_render(enias_render_sdl2* self, uint32_t background_color, void* userdata, enias_render_sdl2_callback callback)
@@ -104,6 +117,9 @@ void enias_render_sdl2_render(enias_render_sdl2* self, uint32_t background_color
 
 	SDL_UnlockSurface(self->virtual_screen_surface);
 	update_screen(self->window, self->screen_surface, self->virtual_screen_surface);
+
+	SDL_Delay(ticks_to_sleep(self));
+	self->next_frame_tick = SDL_GetTicks() + ENIAS_FRAME_TIME;
 }
 
 void enias_render_sdl2_close(enias_render_sdl2* self)

@@ -32,6 +32,7 @@ typedef struct enias_render_sdl2 {
 	SDL_Window* window;
 	SDL_Surface* screen_surface;
 	SDL_Surface* virtual_screen_surface;
+	uint32_t next_frame_tick;
 } enias_render_sdl2;
 
 typedef void (*enias_render_sdl2_callback)(void* self, uint32_t* pixels);
