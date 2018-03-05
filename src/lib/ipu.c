@@ -33,9 +33,12 @@ static void set_input_to_memory(const enias_ipu* input, uint8_t* memory)
 		memory[0xff00 + i * 2] = input->gamepads[i].normal;
 		memory[0xff00 + i * 2 + 1] = input->gamepads[i].extended;
 	}
+
+	memory[0xff08] = input->keyboard_char;
 }
 
-void enias_ipu_update(const enias_ipu* self, uint8_t* memory)
+void enias_ipu_update(enias_ipu* self, uint8_t* memory)
 {
 	set_input_to_memory(self, memory);
+	self->keyboard_char = 0;
 }

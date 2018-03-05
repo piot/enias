@@ -55,9 +55,16 @@ static void handle_key(enias_ipu* ipu, const SDL_KeyboardEvent* event, int on)
 	} else {
 		gamepad->normal &= ~mask;
 	}
+
 	if (mask != 0) {
 		// printf("Gamepad %02X\n", gamepad->normal);
 	}
+}
+
+static void handle_text_input(enias_ipu* ipu, const SDL_TextInputEvent* event)
+{
+	ipu->keyboard_char = event->text[0];
+	// printf("Text Input %02X\n", ipu->keyboard_char);
 }
 
 static void handle_key_up(enias_ipu* ipu, const SDL_KeyboardEvent* event)
@@ -90,6 +97,9 @@ static int check_sdl_events(enias_ipu* ipu)
 				break;
 			case SDL_KEYUP:
 				handle_key_up(ipu, &event.key);
+				break;
+			case SDL_TEXTINPUT:
+				handle_text_input(ipu, &event.text);
 				break;
 		}
 	}

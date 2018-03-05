@@ -43,9 +43,10 @@ typedef struct enias_ipu_gamepad {
 } enias_ipu_gamepad;
 
 typedef struct enias_ipu {
+	uint8_t keyboard_char;
 	enias_ipu_gamepad gamepads[2];
 } enias_ipu;
 
-void enias_ipu_update(const enias_ipu* self, uint8_t* memory);
+void enias_ipu_update(enias_ipu* self, uint8_t* memory);
 
 #endif
