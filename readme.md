@@ -36,6 +36,7 @@ All addresses are "indirect". The 16-bit value stored is used as the actual addr
 | $FE14-$FE15     | channels      |   |
 | ------------    | ------------   |   |
 | $FF00-$FF05     | input           |   |
+| $FF08-$FF08     | keyboard           |   |
 
 ## Tiles
 Each tile is 8x8 pixels, with four bits for each pixel. The pixel value is an actual index lookup into the palette. 0 (zero) is always considered to be transparent.
@@ -77,6 +78,11 @@ Four gamepads, each has the following
 | 0             | normal   | abstudlr | $80 A, $40 B, $20 Select, $10 Start, $08 Up, $04 Down, $02 Left, $01 Right
 | 1             | extended | xylr0000 | $80 X, $40 Y, $20 Left trigger, $10 Right trigger
 
+### Keyboard input
+
+| Address       | Name     |   Description |
+|---------------|----------|---------------|
+| $FF08         | key      | Latest pressed key (ASCII) or 0 (zero) if no key pressed |
 
 ## Sound Chip
 
