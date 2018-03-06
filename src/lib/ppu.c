@@ -26,6 +26,11 @@ SOFTWARE.
 #include <enias/ppu.h>
 #include <stddef.h>
 
+#define ENIAS_PPU_TILE_ADDRESS (0xB000)
+#define ENIAS_PPU_SPRITE_ADDRESS (0xF400)
+#define ENIAS_PPU_PALETTE_ADDRESS (0xF500)
+#define ENIAS_PPU_NAMETABLE_ADDRESS (0xF000)
+
 #define ENIAS_PPU_SPRITE_FLAG_PRIORITY (0x20)
 #define ENIAS_PPU_SPRITE_FLAG_HFLIP (0x40)
 #define ENIAS_PPU_SPRITE_FLAG_VFLIP (0x80)
@@ -67,12 +72,6 @@ static void tile_to_screen(uint32_t* surface_pixels, const enias_ppu* ppu, size_
 	}
 }
 
-static inline const uint8_t* get_address_indirect(const uint8_t* memory, const uint16_t address)
-{
-	uint16_t memory_address = memory[address] + (memory[address + 1] << 8);
-	return memory + memory_address;
-}
-
 static void render_background_chars(uint32_t* surface_pixels, enias_ppu* ppu)
 {
 	for (uint8_t y = 0; y < ENIAS_PPU_SCREEN_HEIGHT / 8; ++y) {
@@ -106,10 +105,10 @@ static void render_sprites(uint32_t* surface_pixels, enias_ppu* ppu, uint8_t pri
 
 void enias_ppu_setup(enias_ppu* ppu, const uint8_t* memory)
 {
-	const enias_sprite_info* sprite_info = (const enias_sprite_info*) get_address_indirect(memory, 0xfe02);
-	const enias_palette_info* palette = (const enias_palette_info*) get_address_indirect(memory, 0xfe04);
-	const enias_name_table_info* name_table = (const enias_name_table_info*) get_address_indirect(memory, 0xfe06);
-	const uint8_t* tile_start = get_address_indirect(memory, 0xfe00);
+	const enias_sprite_info* sprite_info = (const enias_sprite_info*) (memory + ENIAS_PPU_SPRITE_ADDRESS);
+	const enias_palette_info* palette = (const enias_palette_info*) (memory + ENIAS_PPU_PALETTE_ADDRESS);
+	const enias_name_table_info* name_table = (const enias_name_table_info*) (memory + ENIAS_PPU_NAMETABLE_ADDRESS);
+	const uint8_t* tile_start = (memory + ENIAS_PPU_TILE_ADDRESS);
 
 	ppu->sprites = sprite_info;
 	ppu->palette = palette;

@@ -27,14 +27,16 @@ SOFTWARE.
 
 #include <stddef.h>
 
+#define IPU_START_ADDRESS (0xFA00)
+
 static void set_input_to_memory(const enias_ipu* input, uint8_t* memory)
 {
 	for (size_t i = 0; i < 2; ++i) {
-		memory[0xff00 + i * 2] = input->gamepads[i].normal;
-		memory[0xff00 + i * 2 + 1] = input->gamepads[i].extended;
+		memory[IPU_START_ADDRESS + i * 2] = input->gamepads[i].normal;
+		memory[IPU_START_ADDRESS + i * 2 + 1] = input->gamepads[i].extended;
 	}
 
-	memory[0xff08] = input->keyboard_char;
+	memory[IPU_START_ADDRESS + 0x08] = input->keyboard_char;
 }
 
 void enias_ipu_update(enias_ipu* self, uint8_t* memory)

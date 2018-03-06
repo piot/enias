@@ -32,7 +32,7 @@ void zany_cpu_set_entry(zany_cpu* cpu)
 
 void zany_cpu_set_continue_vector(zany_cpu* cpu)
 {
-	cpu->pc = (cpu->memory[0xfff9] << 8) | cpu->memory[0xfff8];
+	cpu->pc = (cpu->memory[ZANY_CONTINUE_VECTOR + 1] << 8) | cpu->memory[ZANY_CONTINUE_VECTOR];
 }
 
 void zany_cpu_init(zany_cpu* cpu)

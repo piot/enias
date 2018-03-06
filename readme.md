@@ -24,31 +24,46 @@ cd src
 ## Memory Layout
 All addresses are "indirect". The 16-bit value stored is used as the actual address.
 
-| Memory Address  | Name            | Description |
-| --------------- | ----------------|---|
-| $FE00-$FE01     | tiles           |   |
-| $FE02-$FE03     | sprite-table    |   |
-| $FE04-$FE05     | palette         |   |
-| $FE06-$FE07     | name-table      |   |
-| $FE08-$FE0D     | name scrolling  |  $FE08 x-offset (0-255), $FE09 y-offset (0-255), start_row_x, start_col_y, width, height  |
-| $FE10-$FE11     | instruments      |   |
-| $FE12-$FE13     | waves      |   |
-| $FE14-$FE15     | channels      |   |
-| ------------    | ------------   |   |
-| $FF00-$FF05     | input           |   |
-| $FF08-$FF08     | keyboard           |   |
+| Memory Address  |  Size | Name                  | Description                                                             |
+| --------------- |-------|-----------------------|-------------------------------------------------------------------------|
+| Cpu             |       |                       |                                                                         |
+| $0000-$00FF     | $0100 | ZP                    | Zero page (registers / scratch area)                                    |
+| $0100-$01FF     | $0100 | Stack                 |                                                                         |
+| Program         |       |                       |                                                                         |
+| $0200-$AFFF     | $AE00 | Program area          |                                                                         |
+| Graphics        |       |                       |                                                                         |
+| $B000-$CFFF     | $2000 | tiles                 | 256 tiles (8x8) each pixel is 4-bit. (8 rows with 32 tiles) sprites and nametable.         |
+| $D000-$EFFF     | $2000 | extended tiles        | 256 tiles (8x8) each pixel is 4-bit. Can only be used for sprites.      |
+| $F000-$F3FF     | $0400 | nametable (default)   | $F000 = upper-left, $F100 = upper-right, $F200 = bottom-left, $F300 = bottom right. |
+| $F400-$F4FF     | $0100 | sprites (default)     |                                                                         |
+| $F500-$F52F     | $0030 | palette               | 16 entries with R,G,B (three octets)                                    |
+| $F530-$F533     | $0004 | nametable scrolling   | $F530 x-offset (0-255), $F531 (0/1), $F532 y-offset (0-255), $F533 (0/1)|
+| Audio           |       |                       |                                                                         |
+| $F600-$F8BF     | $02C0 | 64 waves (x 11 octets)|                                                                         |
+| $F8C0-$F97F     | $00B0 | 16 channels           |                                                                         |
+| $F980-$F987     | $0008 | Effects               |                                                                         |
+| Input           |       |                       |                                                                         |
+| $FA00           | $0008 | Gamepad 4 x 2 octets  |                                                                         |
+| $FA08           | $0001 | Keyboard input        |                                                                         |
+| Reserved        |       |                       |                                                                         |
+| $FB00-$FEFF     | $0500 | Reserved              |                                                                         |
+| Vectors         |       |                       |                                                                         |
+| $FFFC-$FFFD     | $0002 | Reset call address.   | Defaults to $0200                                                       |
+| $FFFE-$FFFF     | $0002 | Frame call address.   | Defaults to $0200                                                       |
 
 ## Tiles
 Each tile is 8x8 pixels, with four bits for each pixel. The pixel value is an actual index lookup into the palette. 0 (zero) is always considered to be transparent.
 
 ## Sprites
 
+Usually starts at $FD00
+
 | Octet Offset | Name    | bits     | Description       |
 | -------------| ------- |----------|-------------------|
 | 0            | x       | xxxxxxxx | from left to right|
 | 1            | y       | yyyyyyyy | top to bottom     |
 | 2            | tile    | tttttttt | tile index (each row is 32 tiles)|
-| 3            | status  | vh000ptt | v: vertical flip, h: horizontal flip, p: priority (0 = behind background tiles)|
+| 3            | status  | vhp0000t | v: vertical flip, h: horizontal flip, p: priority (0 = behind background tiles) t: add 256 to tile index|
 
 ## Palette
 16 palette entries. Each entry is:

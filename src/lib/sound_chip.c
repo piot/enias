@@ -43,12 +43,6 @@ int enias_sound_chip_init(enias_sound_chip* self)
 	return 0;
 }
 
-static inline const uint8_t* get_address_indirect(const uint8_t* memory, const uint16_t address)
-{
-	uint16_t memory_address = memory[address] + (memory[address + 1] << 8);
-	return memory + memory_address;
-}
-
 #pragma pack(1)
 typedef struct enias_sound_wave {
 	uint8_t sample_lo;
@@ -64,11 +58,15 @@ typedef struct enias_sound_wave {
 } enias_sound_wave;
 #pragma pack()
 
+#define ENIAS_SOUND_WAVE_ADDRESS (0xF600)
+#define ENIAS_SOUND_CHANNEL_ADDRESS (0xF8C0)
+#define ENIAS_SOUND_INSTRUMENTS_ADDRESS (0xF8C0)
+
 void enias_sound_chip_update(enias_sound_chip* self, const uint8_t* memory)
 {
-	const shout_instrument* instruments = (const shout_instrument*) get_address_indirect(memory, 0xfe10);
-	const enias_sound_wave* enias_waves = (const enias_sound_wave*) get_address_indirect(memory, 0xfe12);
-	const shout_channel* channels = (const shout_channel*) get_address_indirect(memory, 0xfe14);
+	const shout_instrument* instruments = (const shout_instrument*) (memory + ENIAS_SOUND_INSTRUMENTS_ADDRESS);
+	const enias_sound_wave* enias_waves = (const enias_sound_wave*) (memory + ENIAS_SOUND_WAVE_ADDRESS);
+	const shout_channel* channels = (const shout_channel*) (memory + ENIAS_SOUND_CHANNEL_ADDRESS);
 
 	shout_chip* chip = &self->chip;
 	memcpy(chip->instruments, instruments, sizeof(shout_instrument) * MAX_INSTRUMENTS);
