@@ -27,7 +27,7 @@ SOFTWARE.
 
 #include <stddef.h>
 
-#define IPU_START_ADDRESS (0xFA00)
+#define IPU_START_ADDRESS (0xFB00)
 
 static void set_input_to_memory(const enias_ipu* input, uint8_t* memory)
 {

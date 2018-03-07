@@ -59,8 +59,8 @@ typedef struct enias_sound_wave {
 #pragma pack()
 
 #define ENIAS_SOUND_WAVE_ADDRESS (0xF600)
-#define ENIAS_SOUND_CHANNEL_ADDRESS (0xF8C0)
-#define ENIAS_SOUND_INSTRUMENTS_ADDRESS (0xF8C0)
+#define ENIAS_SOUND_CHANNEL_ADDRESS (0xFA00)
+#define ENIAS_SOUND_INSTRUMENTS_ADDRESS (0xF900)
 
 void enias_sound_chip_update(enias_sound_chip* self, const uint8_t* memory)
 {

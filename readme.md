@@ -40,13 +40,14 @@ All addresses are "indirect". The 16-bit value stored is used as the actual addr
 | $F530-$F533     | $0004 | nametable scrolling   | $F530 x-offset (0-255), $F531 (0/1), $F532 y-offset (0-255), $F533 (0/1)|
 | Audio           |       |                       |                                                                         |
 | $F600-$F8BF     | $02C0 | 64 waves (x 11 octets)|                                                                         |
-| $F8C0-$F97F     | $00B0 | 16 channels           |                                                                         |
-| $F980-$F987     | $0008 | Effects               |                                                                         |
+| $F900-$F977     | $0078 | 24 instruments (x 5 octets)|                                                                         |
+| $FA00-$FAAF     | $00B0 | 16 channels           |                                                                         |
+| $FAF0-$FAF7     | $0008 | Effects               |                                                                         |
 | Input           |       |                       |                                                                         |
-| $FA00           | $0008 | Gamepad 4 x 2 octets  |                                                                         |
-| $FA08           | $0001 | Keyboard input        |                                                                         |
+| $FB00           | $0008 | Gamepad 4 x 2 octets  |                                                                         |
+| $FB08           | $0001 | Keyboard input        |                                                                         |
 | Reserved        |       |                       |                                                                         |
-| $FB00-$FEFF     | $0500 | Reserved              |                                                                         |
+| $FB09-$FEFF     | $0500 | Reserved              |                                                                         |
 | Vectors         |       |                       |                                                                         |
 | $FFFC-$FFFD     | $0002 | Reset call address.   | Defaults to $0200                                                       |
 | $FFFE-$FFFF     | $0002 | Frame call address.   | Defaults to $0200                                                       |
@@ -97,7 +98,7 @@ Four gamepads, each has the following
 
 | Address       | Name     |   Description |
 |---------------|----------|---------------|
-| $FF08         | key      | Latest pressed key (ASCII) or 0 (zero) if no key pressed |
+| $FB08         | key      | Latest pressed key (ASCII) or 0 (zero) if no key pressed |
 
 ## Sound Chip
 
