@@ -5,3 +5,7 @@ case CLC:
 case SEC:
     set_flag(cpu, FLAG_CARRY, 1);
     break;
+
+case CLV:
+    set_flag(cpu, FLAG_OVERFLOW, 0);
+    break;
