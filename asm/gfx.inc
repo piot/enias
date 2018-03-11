@@ -55,6 +55,18 @@
 	rts
 .endproc
 
+.proc sprite_set_visible
+	cpy #$00
+	bne done
+
+	ldx #$00
+	ldy #$FF
+	jsr sprite_move
+
+done:
+	rts
+.endproc
+
 
 .proc sprite_move_2x2
 	; a start-sprite
