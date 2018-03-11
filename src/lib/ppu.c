@@ -41,15 +41,19 @@ static void tile_to_screen(uint32_t* surface_pixels, const enias_ppu* ppu, size_
 		return;
 	}
 	uint8_t rows_to_draw = 8;
+	uint8_t cols_to_draw = 8;
 	if (screen_y + 8 >= ENIAS_PPU_SCREEN_HEIGHT) {
 		rows_to_draw = ENIAS_PPU_SCREEN_HEIGHT - screen_y;
+	}
+	if (screen_x + cols_to_draw > ENIAS_PPU_SCREEN_WIDTH) {
+		cols_to_draw = ENIAS_PPU_SCREEN_WIDTH - (uint16_t) screen_x;
 	}
 	uint8_t tix = tile_index % 32;
 	uint8_t tiy = tile_index / 32;
 	uint16_t tmx = tix * 8;
 	uint16_t tmy = tiy * 8;
 	for (uint8_t ty = 0; ty < rows_to_draw; ++ty) {
-		for (uint8_t tx = 0; tx < 8; ++tx) {
+		for (uint8_t tx = 0; tx < cols_to_draw; ++tx) {
 			uint16_t vx = tmx + tx;
 			uint16_t vy = tmy + ty;
 			const uint16_t chars_offset = (vy * ENIAS_PPU_SCREEN_WIDTH / 2) + (vx / 2);
