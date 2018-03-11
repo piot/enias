@@ -33,7 +33,7 @@ SOFTWARE.
 #define ADC_IND_X 0x61
 #define ADC_IND_Y 0x71
 #define ADC_ZP 0x65
-#define ADC_ZPX 0x75
+#define ADC_ZP_X 0x75
 
 #define AND_ABS 0x2D
 #define AND_ABS_X 0x3D
@@ -76,7 +76,7 @@ SOFTWARE.
 #define CMP_IND_X 0xC1
 #define CMP_IND_Y 0xD1
 #define CMP_ZP 0xC5
-#define CMP_ZPX 0xD5
+#define CMP_ZP_X 0xD5
 
 #define CPX_ABS 0xEC
 #define CPX_IMM 0xE0
@@ -176,7 +176,7 @@ SOFTWARE.
 
 #define SBC_IMM 0xE9
 #define SBC_ZP 0xE5
-#define SBC_ZPX 0xF5
+#define SBC_ZP_X 0xF5
 #define SBC_ABS 0xED
 #define SBC_ABS_X 0xFD
 #define SBC_ABS_Y 0xF9
@@ -193,7 +193,7 @@ SOFTWARE.
 #define STA_IND_X 0x81
 #define STA_IND_Y 0x91
 #define STA_ZP 0x85
-#define STA_ZPX 0x95
+#define STA_ZP_X 0x95
 
 #define STX_ZP 0x86
 #define STX_ZP_Y 0x96

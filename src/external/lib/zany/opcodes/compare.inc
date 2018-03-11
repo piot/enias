@@ -33,7 +33,7 @@ case CMP_ZP:
     cmp(cpu, READ_ZP_MEM(cpu), cpu->a);
     break;
 
-case CMP_ZPX:
+case CMP_ZP_X:
     cmp(cpu, READ_ZP_MEM_OFFSET(cpu, cpu->x), cpu->a);
     break;
 

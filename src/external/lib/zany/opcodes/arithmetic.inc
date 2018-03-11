@@ -32,7 +32,7 @@ case ADC_ZP:
     add(cpu, READ_ZP_MEM(cpu));
     break;
 
-case ADC_ZPX:
+case ADC_ZP_X:
     add(cpu, READ_ZP_MEM_OFFSET(cpu, cpu->x));
     break;
 
@@ -71,7 +71,7 @@ case SBC_ZP:
     sub(cpu, READ_ZP_MEM(cpu));
     break;
 
-case SBC_ZPX:
+case SBC_ZP_X:
     sub(cpu, READ_ZP_MEM_OFFSET(cpu, cpu->x));
     break;
 

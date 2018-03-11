@@ -61,20 +61,20 @@ static inline uint8_t get_flag(zany_cpu* cpu, uint8_t flag)
 }
 
 #define TYRAN_LOG_WARN(...) printf(__VA_ARGS__)
-#define TYRAN_LOG_INFO(...)                                                                                                                                                                                                                                    \
-	printf(__VA_ARGS__);                                                                                                                                                                                                                                       \
+#define TYRAN_LOG_INFO(...) \
+	printf(__VA_ARGS__);    \
 	printf("\n");
 
 #define READ_OCTET(cpu) (cpu->memory[cpu->pc++])
 #define ABSOLUTE_MEMORY_OFFSET(low, high, offset) (uint16_t)((uint16_t) offset + (uint16_t) low + ((uint16_t) high << 8))
 #define GET_FROM_MEMORY_OFFSET(cpu, low, high, offset) (cpu->memory[ABSOLUTE_MEMORY_OFFSET(low, high, offset)])
 #define GET_INDEXED_INDIRECT(cpu, addr, offset) GET_FROM_MEMORY_OFFSET(cpu, cpu->memory[addr], cpu->memory[addr + 1], offset)
-#define READ_INDEXED_INDIRECT_PTR_OFFSET(cpu, offset)                                                                                                                                                                                                          \
-	arg1 = READ_OCTET(cpu);                                                                                                                                                                                                                                    \
+#define READ_INDEXED_INDIRECT_PTR_OFFSET(cpu, offset) \
+	arg1 = READ_OCTET(cpu);                           \
 	r = GET_INDEXED_INDIRECT(cpu, arg1, offset)
 
-#define READ_INDEXED_INDIRECT_ZP_OFFSET(cpu, zp_offset)                                                                                                                                                                                                        \
-	arg1 = FORCE_TO_ZP_ADDRESS(READ_OCTET(cpu) + zp_offset);                                                                                                                                                                                                   \
+#define READ_INDEXED_INDIRECT_ZP_OFFSET(cpu, zp_offset)      \
+	arg1 = FORCE_TO_ZP_ADDRESS(READ_OCTET(cpu) + zp_offset); \
 	r = GET_INDEXED_INDIRECT(cpu, arg1, 0)
 
 #define FORCE_TO_ZP_ADDRESS(v) ((uint8_t) v)
@@ -86,30 +86,30 @@ static inline uint8_t get_flag(zany_cpu* cpu, uint8_t flag)
 
 #define READ_IMMEDIATE READ_OCTET
 
-#define READ_ABSOLUTE_MEMORY_ADDRESS(cpu, offset)                                                                                                                                                                                                              \
-	arg1 = READ_OCTET(cpu);                                                                                                                                                                                                                                    \
-	arg2 = READ_OCTET(cpu);                                                                                                                                                                                                                                    \
+#define READ_ABSOLUTE_MEMORY_ADDRESS(cpu, offset) \
+	arg1 = READ_OCTET(cpu);                       \
+	arg2 = READ_OCTET(cpu);                       \
 	r1 = ABSOLUTE_MEMORY_OFFSET(arg1, arg2, offset)
 
-#define READ_ABSOLUTE_MEMORY_WITH_OFFSET(cpu, offset)                                                                                                                                                                                                          \
-	arg1 = READ_OCTET(cpu);                                                                                                                                                                                                                                    \
-	arg2 = READ_OCTET(cpu);                                                                                                                                                                                                                                    \
+#define READ_ABSOLUTE_MEMORY_WITH_OFFSET(cpu, offset) \
+	arg1 = READ_OCTET(cpu);                           \
+	arg2 = READ_OCTET(cpu);                           \
 	r = GET_FROM_MEMORY_OFFSET(cpu, arg1, arg2, offset);
 
 #define READ_INDEXED_INDIRECT_ADDRESS(cpu, addr, offset) ABSOLUTE_MEMORY_OFFSET(cpu->memory[addr + offset], cpu->memory[addr + offset + 1], 0)
 
-#define READ_INDEXED_INDIRECT_MEMORY_ADDRESS_ZP_OFFSET(cpu, off)                                                                                                                                                                                               \
-	arg1 = FORCE_TO_ZP_ADDRESS(READ_OCTET(cpu) + off);                                                                                                                                                                                                         \
+#define READ_INDEXED_INDIRECT_MEMORY_ADDRESS_ZP_OFFSET(cpu, off) \
+	arg1 = FORCE_TO_ZP_ADDRESS(READ_OCTET(cpu) + off);           \
 	r1 = READ_INDEXED_INDIRECT_ADDRESS(cpu, arg1, 0)
 
-#define READ_INDEXED_INDIRECT_MEMORY_ADDRESS_PTR_OFFSET(cpu, off)                                                                                                                                                                                              \
-	arg1 = READ_OCTET(cpu);                                                                                                                                                                                                                                    \
+#define READ_INDEXED_INDIRECT_MEMORY_ADDRESS_PTR_OFFSET(cpu, off) \
+	arg1 = READ_OCTET(cpu);                                       \
 	r1 = READ_INDEXED_INDIRECT_ADDRESS(cpu, arg1, 0) + off
 
-#define READ_BRANCH_WITH_FLAG(cpu, flag, on)                                                                                                                                                                                                                   \
-	arg1 = READ_OCTET(cpu);                                                                                                                                                                                                                                    \
-	if (get_flag(cpu, flag) == on) {                                                                                                                                                                                                                           \
-		cpu->pc += (int8_t) arg1;                                                                                                                                                                                                                              \
+#define READ_BRANCH_WITH_FLAG(cpu, flag, on) \
+	arg1 = READ_OCTET(cpu);                  \
+	if (get_flag(cpu, flag) == on) {         \
+		cpu->pc += (int8_t) arg1;            \
 	}
 
 static inline void cmp(zany_cpu* cpu, uint8_t mem, uint8_t reg)
@@ -150,16 +150,46 @@ static void sleep_a_while()
 }
 #endif
 
+#include <zany/disassembler/disassembler.h>
+
+#if ZANY_DEBUG_OPCODE
+static const char* flag_string(uint8_t flags)
+{
+	static char flag_chars[5];
+	for (int i = 0; i < 4; ++i) {
+		flag_chars[i] = '.';
+	}
+	flag_chars[4] = 0;
+
+	if (flags & FLAG_NEGATIVE) {
+		flag_chars[0] = 'N';
+	}
+	if (flags & FLAG_OVERFLOW) {
+		flag_chars[1] = 'V';
+	}
+	if (flags & FLAG_ZERO) {
+		flag_chars[2] = 'Z';
+	}
+	if (flags & FLAG_CARRY) {
+		flag_chars[3] = 'C';
+	}
+
+	return flag_chars;
+}
+#endif
+
 int zany_run(zany_cpu* cpu)
 {
 	uint8_t r, arg1, arg2;
 	uint16_t r1, r2;
 
 	for (;;) {
-		uint8_t opcode = READ_OCTET(cpu);
-#if defined ZANY_DEBUG_OPCODE
-		TYRAN_LOG_INFO("opcode:%02X a:%02X x:%02X y:%02X pc:%04X sr:%02X", opcode, cpu->a, cpu->x, cpu->y, (cpu->pc - 1), cpu->sr);
+#if ZANY_DEBUG_OPCODE
+		uint8_t x;
+		const char* ds = zany_disassembler_string(cpu->memory, cpu->pc, &x);
+		TYRAN_LOG_INFO("%04X %-20s a:%02x x:%02x y:%02x pc:%04x %s", cpu->pc, ds, cpu->a, cpu->x, cpu->y, (cpu->pc - 1), flag_string(cpu->sr));
 #endif
+		uint8_t opcode = READ_OCTET(cpu);
 		switch (opcode) {
 #include "opcodes/arithmetic.inc"
 #include "opcodes/branch.inc"
@@ -181,7 +211,7 @@ int zany_run(zany_cpu* cpu)
 				break;
 		}
 #if defined ZANY_DEBUG_OPCODE
-		sleep_a_while();
+// sleep_a_while();
 #endif
 	}
 	return 0;

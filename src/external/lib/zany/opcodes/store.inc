@@ -30,7 +30,7 @@ case STA_ZP:
     cpu->memory[r1] = cpu->a;
     break;
 
-case STA_ZPX:
+case STA_ZP_X:
     r1 = FORCE_TO_ZP_ADDRESS(READ_IMMEDIATE(cpu) + cpu->x);
     cpu->memory[r1] = cpu->a;
     break;
