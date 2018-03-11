@@ -14,11 +14,10 @@ case INC_ABS_X:
 case INC_ZP:
     r1 = READ_OCTET(cpu);
     set_flags(cpu, ++cpu->memory[r1]);
-
     break;
 
 case INC_ZP_X:
-    r1 = ZP(READ_OCTET(cpu) + cpu->x);
+    r1 = FORCE_TO_ZP_ADDRESS(READ_OCTET(cpu) + cpu->x);
     set_flags(cpu, ++cpu->memory[r1]);
 
     break;
@@ -52,7 +51,7 @@ case DEC_ZP:
     break;
 
 case DEC_ZP_X:
-    r1 = ZP(READ_OCTET(cpu) + cpu->x);
+    r1 = FORCE_TO_ZP_ADDRESS(READ_OCTET(cpu) + cpu->x);
     set_flags(cpu, --cpu->memory[r1]);
 
     break;

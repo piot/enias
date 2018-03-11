@@ -6,12 +6,12 @@ case AND_IMM:
     break;
 
 case AND_ZP:
-    cpu->a &= GET_ZP_MEM(cpu);
+    cpu->a &= READ_ZP_MEM(cpu);
     set_flags(cpu, cpu->a);
     break;
 
 case AND_ZP_X:
-    cpu->a &= GET_ZP_MEM_OFFSET(cpu, cpu->x);
+    cpu->a &= READ_ZP_MEM_OFFSET(cpu, cpu->x);
     set_flags(cpu, cpu->a);
     break;
 
@@ -53,12 +53,12 @@ case EOR_IMM:
     break;
 
 case EOR_ZP:
-    cpu->a ^= GET_ZP_MEM(cpu);
+    cpu->a ^= READ_ZP_MEM(cpu);
     set_flags(cpu, cpu->a);
     break;
 
 case EOR_ZP_X:
-    cpu->a ^= GET_ZP_MEM_OFFSET(cpu, cpu->x);
+    cpu->a ^= READ_ZP_MEM_OFFSET(cpu, cpu->x);
     set_flags(cpu, cpu->a);
     break;
 
@@ -100,12 +100,12 @@ case ORA_IMM:
     break;
 
 case ORA_ZP:
-    cpu->a |= GET_ZP_MEM(cpu);
+    cpu->a |= READ_ZP_MEM(cpu);
     set_flags(cpu, cpu->a);
     break;
 
 case ORA_ZP_X:
-    cpu->a |= GET_ZP_MEM_OFFSET(cpu, cpu->x);
+    cpu->a |= READ_ZP_MEM_OFFSET(cpu, cpu->x);
     set_flags(cpu, cpu->a);
     break;
 
@@ -149,7 +149,7 @@ case BIT_ABS:
     break;
 
 case BIT_ZP:
-    arg1 = GET_ZP_MEM(cpu);
+    arg1 = READ_ZP_MEM(cpu);
     set_flag(cpu, FLAG_ZERO, !(arg1 & cpu->a));
     set_flag(cpu, FLAG_OVERFLOW, arg1 & 0x40);
     set_flag(cpu, FLAG_NEGATIVE, arg1 & 0x80);

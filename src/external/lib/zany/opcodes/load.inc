@@ -35,12 +35,12 @@ case LDA_IND_Y:
     break;
 
 case LDA_ZP:
-    cpu->a = GET_ZP_MEM(cpu);
+    cpu->a = READ_ZP_MEM(cpu);
     set_flags(cpu, cpu->a);
     break;
 
 case LDA_ZP_X:
-    cpu->a = GET_ZP_MEM_OFFSET(cpu, cpu->x);
+    cpu->a = READ_ZP_MEM_OFFSET(cpu, cpu->x);
     set_flags(cpu, cpu->a);
     break;
 
@@ -64,12 +64,12 @@ case LDX_IMM:
     break;
 
 case LDX_ZP:
-    cpu->x = GET_ZP_MEM(cpu);
+    cpu->x = READ_ZP_MEM(cpu);
     set_flags(cpu, cpu->x);
     break;
 
 case LDX_ZP_Y:
-    cpu->x = GET_ZP_MEM_OFFSET(cpu, cpu->y);
+    cpu->x = READ_ZP_MEM_OFFSET(cpu, cpu->y);
     set_flags(cpu, cpu->x);
     break;
 
@@ -93,11 +93,11 @@ case LDY_IMM:
     break;
 
 case LDY_ZP:
-    cpu->y = GET_ZP_MEM(cpu);
+    cpu->y = READ_ZP_MEM(cpu);
     set_flags(cpu, cpu->y);
     break;
 
 case LDY_ZP_X:
-    cpu->y = GET_ZP_MEM_OFFSET(cpu, cpu->x);
+    cpu->y = READ_ZP_MEM_OFFSET(cpu, cpu->x);
     set_flags(cpu, cpu->y);
     break;

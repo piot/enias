@@ -29,11 +29,11 @@ case ADC_IND_Y:
     break;
 
 case ADC_ZP:
-    add(cpu, GET_ZP_MEM(cpu));
+    add(cpu, READ_ZP_MEM(cpu));
     break;
 
 case ADC_ZPX:
-    add(cpu, GET_ZP_MEM_OFFSET(cpu, cpu->x));
+    add(cpu, READ_ZP_MEM_OFFSET(cpu, cpu->x));
     break;
 
 /* --------------------------------------- */
@@ -68,11 +68,11 @@ case SBC_IND_Y:
     break;
 
 case SBC_ZP:
-    sub(cpu, GET_ZP_MEM(cpu));
+    sub(cpu, READ_ZP_MEM(cpu));
     break;
 
 case SBC_ZPX:
-    sub(cpu, GET_ZP_MEM_OFFSET(cpu, cpu->x));
+    sub(cpu, READ_ZP_MEM_OFFSET(cpu, cpu->x));
     break;
 
 /* --------------------------------------- */

@@ -27,7 +27,7 @@ case ASL_ZP:
     break;
 
 case ASL_ZP_X:
-    arg1 = ZP(READ_IMMEDIATE(cpu) + cpu->x);
+    arg1 = FORCE_TO_ZP_ADDRESS(READ_IMMEDIATE(cpu) + cpu->x);
     set_flag(cpu, FLAG_CARRY, cpu->memory[arg1] & 0x80);
     cpu->memory[arg1] = (cpu->memory[arg1] << 1) & 0xFE;
     set_flags(cpu, cpu->memory[arg1]);
@@ -63,7 +63,7 @@ case LSR_ZP:
     break;
 
 case LSR_ZP_X:
-    arg1 = ZP(READ_IMMEDIATE(cpu) + cpu->x);
+    arg1 = FORCE_TO_ZP_ADDRESS(READ_IMMEDIATE(cpu) + cpu->x);
     set_flag(cpu, FLAG_CARRY, cpu->memory[arg1] & 0x01);
     cpu->memory[arg1] = (cpu->memory[arg1] >> 1) & 0x7F;
     set_flags(cpu, cpu->memory[arg1]);
@@ -103,7 +103,7 @@ case ROL_ZP:
     break;
 
 case ROL_ZP_X:
-    arg1 = ZP(READ_IMMEDIATE(cpu) + cpu->x);
+    arg1 = FORCE_TO_ZP_ADDRESS(READ_IMMEDIATE(cpu) + cpu->x);
     r = cpu->memory[arg1] & 0x80;
     cpu->memory[arg1] = ((cpu->memory[arg1] << 1) & 0xFE) | get_flag(cpu, FLAG_CARRY);
     set_flag(cpu, FLAG_CARRY, r);
@@ -144,7 +144,7 @@ case ROR_ZP:
     break;
 
 case ROR_ZP_X:
-    arg1 = ZP(READ_IMMEDIATE(cpu) + cpu->x);
+    arg1 = FORCE_TO_ZP_ADDRESS(READ_IMMEDIATE(cpu) + cpu->x);
     r = cpu->memory[arg1] & 0x01;
     cpu->memory[arg1] = ((cpu->memory[arg1] >> 1) & 0x7F) | (get_flag(cpu, FLAG_CARRY) << 7);
     set_flag(cpu, FLAG_CARRY, r);

@@ -74,12 +74,12 @@ static inline uint8_t get_flag(zany_cpu* cpu, uint8_t flag)
 	r = GET_INDEXED_INDIRECT(cpu, arg1, offset)
 
 #define READ_INDEXED_INDIRECT_ZP_OFFSET(cpu, zp_offset)                                                                                                                                                                                                        \
-	arg1 = ZP(READ_OCTET(cpu) + zp_offset);                                                                                                                                                                                                                    \
+	arg1 = FORCE_TO_ZP_ADDRESS(READ_OCTET(cpu) + zp_offset);                                                                                                                                                                                                   \
 	r = GET_INDEXED_INDIRECT(cpu, arg1, 0)
 
-#define ZP(v) ((uint8_t) v)
-#define GET_ZP_MEM(cpu) cpu->memory[READ_OCTET(cpu)]
-#define GET_ZP_MEM_OFFSET(cpu, offset) (cpu->memory[ZP(READ_OCTET(cpu) + offset)])
+#define FORCE_TO_ZP_ADDRESS(v) ((uint8_t) v)
+#define READ_ZP_MEM(cpu) cpu->memory[READ_OCTET(cpu)]
+#define READ_ZP_MEM_OFFSET(cpu, offset) (cpu->memory[FORCE_TO_ZP_ADDRESS(READ_OCTET(cpu) + offset)])
 #define STACK_START 0x0100
 #define STACK_PUSH(cpu, v) (cpu)->memory[(cpu)->sp-- + STACK_START] = v
 #define STACK_POP(cpu) (cpu)->memory[++(cpu)->sp + STACK_START]
@@ -99,7 +99,7 @@ static inline uint8_t get_flag(zany_cpu* cpu, uint8_t flag)
 #define READ_INDEXED_INDIRECT_ADDRESS(cpu, addr, offset) ABSOLUTE_MEMORY_OFFSET(cpu->memory[addr + offset], cpu->memory[addr + offset + 1], 0)
 
 #define READ_INDEXED_INDIRECT_MEMORY_ADDRESS_ZP_OFFSET(cpu, off)                                                                                                                                                                                               \
-	arg1 = ZP(READ_OCTET(cpu) + off);                                                                                                                                                                                                                          \
+	arg1 = FORCE_TO_ZP_ADDRESS(READ_OCTET(cpu) + off);                                                                                                                                                                                                         \
 	r1 = READ_INDEXED_INDIRECT_ADDRESS(cpu, arg1, 0)
 
 #define READ_INDEXED_INDIRECT_MEMORY_ADDRESS_PTR_OFFSET(cpu, off)                                                                                                                                                                                              \

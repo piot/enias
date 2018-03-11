@@ -65,8 +65,8 @@ SOFTWARE.
 #define BVS_REL 0x70
 
 #define CLC 0x18
-#define CLD 0xD8
-#define CLI 0x58
+#define CLD_NOT_USED 0xD8
+#define CLI_NOT_USED 0x58
 #define CLV 0xB8
 
 #define CMP_ABS 0xCD
@@ -155,9 +155,9 @@ SOFTWARE.
 #define NOP 0xEA
 
 #define PHA 0x48
-#define PHP 0x08
+#define PHP_NOT_USED 0x08
 #define PLA 0x68
-#define PLP 0x28
+#define PLP_NOT_USED 0x28
 
 #define ROL_ABS 0x2E
 #define ROL_ABS_X 0x3E
@@ -171,7 +171,7 @@ SOFTWARE.
 #define ROR_ZP 0x66
 #define ROR_ZP_X 0x76
 
-#define RTI 0x40
+#define RTI_NOT_USED 0x40
 #define RTS 0x60
 
 #define SBC_IMM 0xE9
@@ -184,8 +184,8 @@ SOFTWARE.
 #define SBC_IND_Y 0xF1
 
 #define SEC 0x38
-#define SED 0xF8
-#define SEI 0x78
+#define SED_NOT_USED 0xF8
+#define SEI_NOT_USED 0x78
 
 #define STA_ABS 0x8D
 #define STA_ABS_X 0x9D
@@ -205,9 +205,9 @@ SOFTWARE.
 
 #define TAX 0xAA
 #define TAY 0xA8
-#define TSX 0xBA
+#define TSX_NOT_USED 0xBA
 #define TXA 0x8A
-#define TXS 0x9A
+#define TXS_NOT_USED 0x9A
 #define TYA 0x98
 
 #endif

@@ -26,24 +26,24 @@ case STA_IND_Y:
     break;
 
 case STA_ZP:
-    r1 = ZP(READ_IMMEDIATE(cpu));
+    r1 = FORCE_TO_ZP_ADDRESS(READ_IMMEDIATE(cpu));
     cpu->memory[r1] = cpu->a;
     break;
 
 case STA_ZPX:
-    r1 = ZP(READ_IMMEDIATE(cpu) + cpu->x);
+    r1 = FORCE_TO_ZP_ADDRESS(READ_IMMEDIATE(cpu) + cpu->x);
     cpu->memory[r1] = cpu->a;
     break;
 
 /* --------------------------------------- */
 
 case STX_ZP:
-    r1 = ZP(READ_IMMEDIATE(cpu));
+    r1 = FORCE_TO_ZP_ADDRESS(READ_IMMEDIATE(cpu));
     cpu->memory[r1] = cpu->x;
     break;
 
 case STX_ZP_Y:
-    r1 = ZP(READ_IMMEDIATE(cpu) + cpu->y);
+    r1 = FORCE_TO_ZP_ADDRESS(READ_IMMEDIATE(cpu) + cpu->y);
     cpu->memory[r1] = cpu->x;
     break;
 
@@ -55,12 +55,12 @@ case STX_ABS:
 /* --------------------------------------- */
 
 case STY_ZP:
-    r1 = ZP(READ_IMMEDIATE(cpu));
+    r1 = FORCE_TO_ZP_ADDRESS(READ_IMMEDIATE(cpu));
     cpu->memory[r1] = cpu->y;
     break;
 
 case STY_ZP_X:
-    r1 = ZP(READ_IMMEDIATE(cpu) + cpu->x);
+    r1 = FORCE_TO_ZP_ADDRESS(READ_IMMEDIATE(cpu) + cpu->x);
     cpu->memory[r1] = cpu->y;
     break;
 

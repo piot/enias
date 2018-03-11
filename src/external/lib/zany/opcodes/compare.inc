@@ -15,7 +15,8 @@ case CMP_ABS_Y:
     break;
 
 case CMP_IMM:
-    cmp(cpu, READ_OCTET(cpu), cpu->a);
+	r = READ_OCTET(cpu);
+    cmp(cpu, r, cpu->a);
     break;
 
 case CMP_IND_X:
@@ -29,11 +30,11 @@ case CMP_IND_Y:
     break;
 
 case CMP_ZP:
-    cmp(cpu, GET_ZP_MEM(cpu), cpu->a);
+    cmp(cpu, READ_ZP_MEM(cpu), cpu->a);
     break;
 
 case CMP_ZPX:
-    cmp(cpu, GET_ZP_MEM_OFFSET(cpu, cpu->x), cpu->a);
+    cmp(cpu, READ_ZP_MEM_OFFSET(cpu, cpu->x), cpu->a);
     break;
 
 /* --------------------------------------- */
@@ -48,7 +49,7 @@ case CPX_IMM:
     break;
 
 case CPX_ZP:
-    cmp(cpu, GET_ZP_MEM(cpu), cpu->x);
+    cmp(cpu, READ_ZP_MEM(cpu), cpu->x);
     break;
 
 /* --------------------------------------- */
@@ -63,7 +64,7 @@ case CPY_IMM:
     break;
 
 case CPY_ZP:
-    cmp(cpu, GET_ZP_MEM(cpu), cpu->y);
+    cmp(cpu, READ_ZP_MEM(cpu), cpu->y);
     break;
 
 /* --------------------------------------- */
