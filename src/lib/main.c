@@ -27,14 +27,18 @@ SOFTWARE.
 
 int main(int argc, char* argv[])
 {
+#if defined ENIAS_PLATFORM_WEBASSEMBLY
+	const char* program_file = "shmup.prg";
+#else
 	if (argc < 2) {
 		printf("\nUsage: enias prg-file\n");
 		return 0;
 	}
-
+	const char* program_file = argv[1];
+#endif
 	enias_machine enias;
 	enias_machine_init(&enias);
-	enias_machine_load_memory(&enias, argv[1]);
+	enias_machine_load_memory(&enias, program_file);
 	enias_machine_go(&enias);
 
 	return 0;
