@@ -60,11 +60,13 @@ static int update_frame(enias_machine* self)
 	return quit;
 }
 
+#if ENIAS_PLATFORM_WEBASSEMBLY
 static void on_frame(void* _self)
 {
 	enias_machine* self = (enias_machine*) _self;
 	update_frame(self);
 }
+#endif
 
 static int loop(enias_machine* self)
 {
