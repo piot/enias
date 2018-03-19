@@ -11,9 +11,36 @@
 2. Add a file called `lesson1.s` and enter the following 6502 assembler:
 
 ```6502
-.org $0200
+    .org $0200
 
     rts
+```
+
+3. Compile to an object file with
+
+```bash
+$ ca65 lesson1.s
+```
+
+4. Then link it (using the Enias memory [layout config file](../asm/enias.cfg))
+
+```bash
+$ ld65 -C <path-to-enias>/asm/enias.cfg lesson1.o
+```
+
+5. This will produce a `a.out` executable:
+
+```bash
+$ ls
+a.out
+lesson1.s
+lesson1.o
+```
+
+6. Finally - run it inside enias
+
+```bash
+$ <path-to-enias>/src/enias a.out
 ```
 
 ## Lesson 2 - rendering a sprite
