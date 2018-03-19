@@ -146,3 +146,43 @@ This pattern is so common that there is a shortcut though:
 ```
 
 ## Lesson 4 - interactivity
+
+1. Enias supports both computer keyboards and USB gamepads. To get input we can read the memory from `$FB00` and use a bitmask to know if a certain key/button is pressed. In this example we will expand the lesson 3 demo with the ability to move up and down ($08 and $04 respectively). First, define a constant for the input memory location:
+
+```6502
+ENIAS_GAMEPAD = $FB00
+```
+
+2. Below the code for moving the sprite (but before `rts`!) we can read the value of the gamepad into register `a`:
+
+```6502
+lda ENIAS_GAMEPAD
+```
+
+3. To enable vertical movement another global variable must be added:
+
+```6502
+sprite_y:
+    .byte #108
+```
+
+Make sure it is used in the code above too:
+
+```6502
+;; Set Y
+    inx
+    lda sprite_y
+    sta ENIAS_SPRITES,x
+```
+
+4. To handle the input, compare the bits in register `a` with the bits in the constant for the up button ($04, or `00000100` in binary) using `and`. If the result contains was only zeroes (checked with the `beq` command) we jump over the code that modifies `sprite_y`.
+
+```6502
+    lda ENIAS_GAMEPAD     ; a = ENIAS_GAMEPAD
+    and #$04              ; result = a & 0x04
+    beq dont_move         ; if(result == 0) { goto dont_move }
+    inc sprite_y          ; sprite_y++
+dont_move:
+```
+
+Now the 'e' can be moved with the `down` key.
