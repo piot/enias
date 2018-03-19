@@ -91,19 +91,19 @@ This magical value is the memory location (in hex) where Enias knows to look for
 7. By changing the offset we can set the Y and the tile index too:
 
 ```6502
-    inx                         ; Increase the offset to 1
-    lda #108                    ; Y position of the sprite
-    sta ENIAS_SPRITES,x
+    inx                         ; x++
+    lda #108                    ; a = 108
+    sta ENIAS_SPRITES,x         ; ENIAS_SPRITES[x] = a
 
-    inx                         ; Increase the offset to 2
-    lda #101                    ; Tile index
-    sta ENIAS_SPRITES,x
+    inx                         ; x++
+    lda #101                    ; a = 101
+    sta ENIAS_SPRITES,x         ; ENIAS_SPRITES[x] = a
 ```
 
 8. Remember to not remove the call to `rts` at the end, it passes execution back to Enias. Without it your program will crash!
 
-9. Try building and running the code with the same commands as in lesson 1. If it fails, check out the [example source code](lesson2/lesson2.s)]. If all goes well you should see the following window:
+9. Try building and running the code with the same commands as in lesson 1. If it fails, check out the [example source code](lesson2/lesson2.s). If all goes well you should see the following window:
 
-<img src="lesson2.png">
+<img src="lesson2/lesson2.png">
 
 ## Lesson 3 - moving a sprite
