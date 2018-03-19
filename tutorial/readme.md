@@ -147,7 +147,7 @@ This pattern is so common that there is a shortcut though:
 
 ## Lesson 4 - interactivity
 
-1. Enias supports both computer keyboards and USB gamepads. To get input we can read the memory from `$FB00` and use a bitmask to know if a certain key/button is pressed. In this example we will expand the lesson 3 demo with the ability to move up and down ($08 and $04 respectively). First, define a constant for the input memory location:
+1. Enias supports both computer keyboards and USB gamepads. To get input we can read the memory from `$FB00` and use a bitmask to know if a certain key/button is pressed. In this example we will expand the lesson 3 demo with the ability to move up or down ($04 and $08 respectively). First, define a constant for the input memory location:
 
 ```6502
 ENIAS_GAMEPAD = $FB00
