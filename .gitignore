@@ -1,3 +1,4 @@
 /src/enias
 *.o
 a.out
+.DS_Store
