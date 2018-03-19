@@ -163,7 +163,7 @@ lda ENIAS_GAMEPAD
 
 ```6502
 sprite_y:
-    .byte #108
+    .byte 108
 ```
 
 Make sure it is used in the code above too:
