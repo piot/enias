@@ -107,3 +107,34 @@ This magical value is the memory location (in hex) where Enias knows to look for
 <img src="lesson2/window.png">
 
 ## Lesson 3 - moving a sprite
+
+1. A static sprite is no fun - lets make it move! To do this we need a variable. Copy the code from lesson 2 and then add this before the other segment definitions:
+
+```6502
+sprite_x:
+    .byte $00
+```
+
+The linker (ld65) will find a good memory location for this variable that now has the name "sprite_x". The `.byte` reserves 1 byte in memory.
+
+2. Instead of setting the sprite X position to a compile time constant we can now use this fancy (global) variable instead:
+
+```6502
+    ldx #00
+    lda sprite_x                ; a = sprite_x
+    sta ENIAS_SPRITES,x
+```
+
+3. But hold your horses, this will not be a very fun demo. We need to change `sprite_x` for the sprite to start moving. Let's increase it by one each frame:
+
+```6502
+    ldx sprite_x       ; x = sprite_x
+    inx                ; x++
+    stx sprite_x       ; sprite_x = x
+```
+
+This pattern is so common that there is a shortcut though:
+
+```6502
+    inc sprite_x
+```
