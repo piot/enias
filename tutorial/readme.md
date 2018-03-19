@@ -3,9 +3,9 @@
 ## Lesson 0 - installing Enias
 1. Clone this repo.
 2. Install the `ca65` compiler:
-   2.1 Clone [https://github.com/cc65/cc65](https://github.com/cc65/cc65)
-   2.2 `cd` into the directory and run `make`
-   2.3 Finally, to make the binaries available on your system, run `sudo make avail`
+2.1 Clone [https://github.com/cc65/cc65](https://github.com/cc65/cc65)
+2.2 `cd` into the directory and run `make`
+2.3 Finally, to make the binaries available on your system, run `sudo make avail`
 3. Install SDL2.
 4. Go to `/src/` and run `$ ./compile`
 
