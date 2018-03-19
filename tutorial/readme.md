@@ -186,3 +186,18 @@ dont_move:
 ```
 
 Now the 'e' can be moved with the `down` key.
+
+5. To handle going up also, the code needs a little extension. We also rename "dont_move" to "dont_move_down" to make it a bit more clear.
+
+```6502
+    lda ENIAS_GAMEPAD
+    and #$04
+    beq dont_move_down
+    inc sprite_y
+dont_move_down:
+    lda ENIAS_GAMEPAD
+    and #$08
+    beq dont_move_up
+    dec sprite_y
+dont_move_up:
+```

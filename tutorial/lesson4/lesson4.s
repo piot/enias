@@ -26,9 +26,14 @@
     ;; Input logic
     lda ENIAS_GAMEPAD     ; a = ENIAS_GAMEPAD
     and #$04              ; result = a & 0x04
-    beq dont_move         ; if(result == 0) { goto dont_move }
+    beq dont_move_down    ; if(result == 0) { goto dont_move }
     inc sprite_y          ; sprite_y++
-dont_move:
+dont_move_down:
+    lda ENIAS_GAMEPAD
+    and #$08
+    beq dont_move_up
+    dec sprite_y
+dont_move_up:
 
     rts
 
