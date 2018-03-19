@@ -104,6 +104,6 @@ This magical value is the memory location (in hex) where Enias knows to look for
 
 9. Try building and running the code with the same commands as in lesson 1. If it fails, check out the [example source code](lesson2/lesson2.s). If all goes well you should see the following window:
 
-<img src="lesson2/lesson2.png">
+<img src="lesson2/window.png">
 
 ## Lesson 3 - moving a sprite
