@@ -46,13 +46,19 @@ lesson1.o
 $ <path-to-enias>/src/enias a.out
 ```
 
+7. For your convenience we've added a `compile.sh` script that does all of the above steps in one go, so you can just do
+
+```bash
+$ ./compile.sh
+```
+
 ## Lesson 2 - rendering a sprite
 
-1. Enias only support 16 colors at the same time. To define those colors, a palette file is used. An example palette can be found in [/assets/palette.bin](assets/palette.bin). It contains 16 RGB (24-bits each) colors.
+1. Enias only support 16 colors at the same time. To define those colors, a palette file is used. An example palette can be found in [/assets/palette.bin](assets/palette.bin). It contains 16 RGB colors of 24-bits each.
 
 2. Sprites and symbols (font characters, map tiles, etc.) all share the same pixel definition. It can be found in the file [/assets/tiles.bin](assets/tiles.bin)
 
-3. The `.segment` lets you specify to ld65 where a certain resource is stored in memory. Adding the following statements will let Enias find the pixel data and the palette.
+3. The `.segment` tells the `ld65` linker where a certain resource is stored in memory. Adding the following statements will let Enias find the pixel data and the palette.
 
 ```6502
     .org $0200
@@ -70,7 +76,7 @@ $ <path-to-enias>/src/enias a.out
 
 <img src="assets/tiles.png">
 
-For example, to render the letter 'e' in the middle of the screen we have to set one of the sprites' X to 124, Y to 108, and tile to 101. It doesn't really matter which one of the sprites we use (0 - 63) except for controlling the order of rendering.
+For example, to render the letter 'e' in the middle of the screen we have to set one of the sprites' X to 124, Y to 108, and tile to 101. It doesn't really matter which one of the sprites we use (0 - 63) unless we care about the order of rendering (higher sprite indexes are rendered on top).
 
 5. To make it easier to refer to the "array" of sprites we define a constant:
 
@@ -80,7 +86,7 @@ ENIAS_SPRITES = $F400
 
 This magical value is the memory location (in hex) where Enias knows to look for the sprites.
 
-6. With the help of this constant and the registers `x` (usually used for offsets) and `a` (usually used for counting) we can set the X position of sprite nr 0 (C-style code on the right):
+6. With the help of this constant and the registers `x` (usually used for offsets) and `a` (usually used for doing math) we can set the X position of sprite nr 0 (C-style code on the right):
 
 ```6502
     ldx #00                 ; x = 0
@@ -138,3 +144,5 @@ This pattern is so common that there is a shortcut though:
 ```6502
     inc sprite_x
 ```
+
+## Lesson 4 - interactivity

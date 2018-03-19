@@ -1,1 +1,3 @@
 /src/enias
+*.o
+a.out
