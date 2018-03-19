@@ -66,12 +66,44 @@ $ <path-to-enias>/src/enias a.out
     .incbin "../assets/palette.bin"
 ```
 
-4. Enias supports 64 sprites of 8x8 pixels each. To actually render a sprite we have to define its position (x and y) plus its tile index (its position in GFX_TILES).
+4. Enias supports 64 sprites of 8x8 pixels each. To actually render a sprite we have to define its position (X and Y) plus its tile index (its position in GFX_TILES).
 
 <img src="assets/tiles.png">
 
-For example, to render the letter 'E' in the middle of the screen we have to set one of the sprites' X to 124, Y to 108, and tile to 96. It doesn't really matter which one of the sprites we use (0 - 63) except for controlling the order of rendering.
+For example, to render the letter 'e' in the middle of the screen we have to set one of the sprites' X to 124, Y to 108, and tile to 101. It doesn't really matter which one of the sprites we use (0 - 63) except for controlling the order of rendering.
 
-5.
+5. To make it easier to refer to the "array" of sprites we define a constant:
+
+```6502
+ENIAS_SPRITES = $F400
+```
+
+This magical value is the memory location (in hex) where Enias knows to look for the sprites.
+
+6. With the help of this constant and the registers `x` (usually used for offsets) and `a` (usually used for counting) we can set the X position of sprite nr 0 (C-style code on the right):
+
+```6502
+    ldx #00                 ; x = 0
+    lda #124                ; a = 124
+    sta ENIAS_SPRITES,x     ; ENIAS_SPRITES[x] = a
+```
+
+7. By changing the offset we can set the Y and the tile index too:
+
+```6502
+    inx                         ; Increase the offset to 1
+    lda #108                    ; Y position of the sprite
+    sta ENIAS_SPRITES,x
+
+    inx                         ; Increase the offset to 2
+    lda #101                    ; Tile index
+    sta ENIAS_SPRITES,x
+```
+
+8. Remember to not remove the call to `rts` at the end, it passes execution back to Enias. Without it your program will crash!
+
+9. Try building and running the code with the same commands as in lesson 1. If it fails, check out the [example source code](lesson2/lesson2.s)]. If all goes well you should see the following window:
+
+<img src="lesson2.png">
 
 ## Lesson 3 - moving a sprite
