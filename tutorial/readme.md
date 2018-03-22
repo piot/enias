@@ -74,7 +74,7 @@ $ ./compile.sh
 
 4. Enias supports 64 sprites of 8x8 pixels each. To actually render a sprite we have to define its position (X and Y) plus its tile index (its position in GFX_TILES).
 
-<img src="assets/tiles.png">
+<img width="100%" src="assets/tiles.png">
 
 For example, to render the letter 'e' in the middle of the screen we have to set one of the sprites' X to 124, Y to 108, and tile to 101. It doesn't really matter which one of the sprites we use (0 - 63) unless we care about the order of rendering (higher sprite indexes are rendered on top).
 
