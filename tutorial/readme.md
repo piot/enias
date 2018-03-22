@@ -201,3 +201,24 @@ dont_move_down:
     dec sprite_y
 dont_move_up:
 ```
+
+# Lesson 5 - Printing a string
+Todo.
+
+# Lesson 6 - Reading and storing strings
+Todo.
+
+# Lesson 7 - Building a level using tiles
+Todo.
+
+# Lesson 8 - Controlling a platforming character
+Todo.
+
+# Lesson 9 - Pickups
+Todo.
+
+# Lesson 10 - Sound effects
+Todo.
+
+# Lesson 11 - Enemies
+Todo.
