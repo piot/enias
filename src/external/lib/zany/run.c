@@ -144,7 +144,7 @@ static void sleep_a_while()
 {
 	struct timespec ts;
 	ts.tv_sec = 0;
-	ts.tv_nsec = 100000000;
+	ts.tv_nsec = 500000;
 
 	nanosleep(&ts, &ts);
 }
@@ -187,7 +187,7 @@ int zany_run(zany_cpu* cpu)
 #if ZANY_DEBUG_OPCODE
 		uint8_t x;
 		const char* ds = zany_disassembler_string(cpu->memory, cpu->pc, &x);
-		TYRAN_LOG_INFO("%04X %-20s a:%02x x:%02x y:%02x pc:%04x %s", cpu->pc, ds, cpu->a, cpu->x, cpu->y, (cpu->pc - 1), flag_string(cpu->sr));
+		TYRAN_LOG_INFO("%04X %-20s a:%02x x:%02x y:%02x %s", cpu->pc, ds, cpu->a, cpu->x, cpu->y, flag_string(cpu->sr));
 #endif
 		uint8_t opcode = READ_OCTET(cpu);
 		switch (opcode) {
@@ -211,7 +211,7 @@ int zany_run(zany_cpu* cpu)
 				break;
 		}
 #if defined ZANY_DEBUG_OPCODE
-// sleep_a_while();
+		sleep_a_while();
 #endif
 	}
 	return 0;
