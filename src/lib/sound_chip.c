@@ -43,6 +43,11 @@ int enias_sound_chip_init(enias_sound_chip* self)
 	return 0;
 }
 
+void enias_sound_chip_close(enias_sound_chip* self)
+{
+	enias_sound_chip_sdl2_close(self);
+}
+
 #pragma pack(1)
 typedef struct enias_sound_wave {
 	uint8_t sample_lo;

@@ -1,4 +1,4 @@
-/src/enias
+deps*/
 *.o
 a.out
 .DS_Store

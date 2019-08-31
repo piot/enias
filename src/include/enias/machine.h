@@ -41,5 +41,5 @@ typedef struct enias_machine {
 void enias_machine_init(enias_machine* self);
 void enias_machine_load_memory(enias_machine* self, const char* filename);
 int enias_machine_go(enias_machine* self);
-
+void enias_machine_close(enias_machine* self);
 #endif

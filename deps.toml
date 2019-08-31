@@ -1,0 +1,18 @@
+depsversion = "0.0.0"
+
+name = "piot/enias"
+version = "0.0.0"
+
+
+[[dependencies]]
+name = 'piot/tyran'
+version = "*"
+
+[[dependencies]]
+name = 'piot/shout'
+version = "*"
+
+
+[[dependencies]]
+name = 'piot/zany'
+version = "*"

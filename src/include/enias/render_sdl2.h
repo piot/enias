@@ -39,5 +39,6 @@ typedef void (*enias_render_sdl2_callback)(void* self, uint32_t* pixels);
 
 void enias_render_sdl2_init(enias_render_sdl2* self, int width, int height);
 void enias_render_sdl2_render(enias_render_sdl2* self, uint32_t color, void* userdata, enias_render_sdl2_callback callback);
+void enias_render_sdl2_close(enias_render_sdl2* self);
 
 #endif

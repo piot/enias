@@ -68,3 +68,8 @@ int enias_sound_chip_sdl2_init(void* userdata, enias_sound_chip_callback callbac
 	SDL_PauseAudio(0);
 	return 0;
 }
+
+void enias_sound_chip_sdl2_close(void* userdata)
+{
+	SDL_CloseAudio();
+}

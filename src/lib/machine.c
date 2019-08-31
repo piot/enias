@@ -27,7 +27,7 @@ SOFTWARE.
 #include <zany/loader.h>
 #include <zany/run.h>
 
-#if ENIAS_PLATFORM_WEBASSEMBLY
+#if defined ENIAS_PLATFORM_WEBASSEMBLY
 #include <emscripten/emscripten.h>
 #endif
 
@@ -37,6 +37,14 @@ void enias_machine_init(enias_machine* self)
 	enias_graphics_chip_init(&self->graphics);
 	enias_input_chip_init(&self->input);
 	enias_sound_chip_init(&self->sound);
+}
+
+void enias_machine_close(enias_machine* self)
+{
+	//zany_cpu_close(&self->cpu);
+	//enias_graphics_chip_close(&self->graphics);
+	//enias_input_chip_close(&self->input);
+	enias_sound_chip_close(&self->sound);
 }
 
 void enias_machine_load_memory(enias_machine* self, const char* filename)
@@ -60,7 +68,7 @@ static int update_frame(enias_machine* self)
 	return quit;
 }
 
-#if ENIAS_PLATFORM_WEBASSEMBLY
+#if defined ENIAS_PLATFORM_WEBASSEMBLY
 static void on_frame(void* _self)
 {
 	enias_machine* self = (enias_machine*) _self;
@@ -76,12 +84,13 @@ static int loop(enias_machine* self)
 		quit = update_frame(self);
 	}
 
+	enias_machine_close(self);
 	return quit;
 }
 
 int enias_machine_go(enias_machine* self)
 {
-#if ENIAS_PLATFORM_WEBASSEMBLY
+#if defined ENIAS_PLATFORM_WEBASSEMBLY
 	emscripten_set_main_loop_arg(on_frame, self, 0, 1);
 	return 0;
 #else

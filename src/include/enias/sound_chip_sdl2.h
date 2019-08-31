@@ -31,5 +31,6 @@ SOFTWARE.
 typedef void (*enias_sound_chip_callback)(void* self, int16_t* sample, int sample_count);
 
 int enias_sound_chip_sdl2_init(void* userdata, enias_sound_chip_callback callback);
+void enias_sound_chip_sdl2_close(void* userdata);
 
 #endif
